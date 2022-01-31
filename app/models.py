@@ -1,8 +1,8 @@
 from __future__ import annotations
 from flask_login import UserMixin
-
-from . import db, app
+from . import db, app, bcrypt
 import os
+from .forms import RegisterForm
 
 def create_db() -> None:
     if not os.path.exists('users.sqlite3'):
@@ -31,4 +31,8 @@ class Users(db.Model, UserMixin):
             return True
         return False
 
+    @staticmethod
+    def create_user(form: RegisterForm) -> Users:
+        user = Users(username = form.username.data, email=form.email.data, password=bcrypt.generate_password_hash(form.password.data).decode('utf-8'))
+        return user
 
