@@ -3,11 +3,13 @@ from flask_login import UserMixin
 from . import db, app, bcrypt
 import os
 from .forms import RegisterForm
+from .config import DBConfig
 
 def create_db() -> None:
-    if not os.path.exists('users.sqlite3'):
+    if not os.path.exists(DBConfig.DB_NAME):
         with app.app_context():
             db.create_all()
+
 
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +35,9 @@ class Users(db.Model, UserMixin):
 
     @staticmethod
     def create_user(form: RegisterForm) -> Users:
-        user = Users(username = form.username.data, email=form.email.data, password=bcrypt.generate_password_hash(form.password.data).decode('utf-8'))
+        user = Users(
+            username=form.username.data,
+            email=form.email.data,
+            password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"),
+        )
         return user
-
