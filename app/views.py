@@ -10,7 +10,6 @@ from flask.views import MethodView
 def load_user(user_id):
     return Users.query.get(int(user_id))
 
-
 class Register(MethodView):
     def __init__(self):
         self.template_name = 'register.html'
@@ -27,11 +26,13 @@ class Register(MethodView):
                 Users.add_to_db(user)
                 return "You account has been created"
             return "Email is already registered"
+        return render_template(self.template_name, form=form)
 
 
 class Login(MethodView):
     def __init__(self):
         self.template_name = 'login.html'
+
     def get(self):
         form = LoginForm()
         return render_template(self.template_name, form=form)

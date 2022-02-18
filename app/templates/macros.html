@@ -1,13 +1,11 @@
-{% macro render_field(form) %}
+{% macro display_errors(form) %}
 
-{{ form.label }}:  {{form(**kwargs)|safe}}
 <br>
-{% if form.errors %}
     <ul class=errors>
     {% for error in form.errors %}
       <li>{{ error }}</li>
     {% endfor %}
     </ul>
-{% endif %}
 
 {% endmacro %}
+

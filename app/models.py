@@ -5,6 +5,7 @@ import os
 from .forms import RegisterForm
 from .config import DBConfig
 
+
 def create_db() -> None:
     if not os.path.exists(DBConfig.DB_NAME):
         with app.app_context():
@@ -35,9 +36,14 @@ class Users(db.Model, UserMixin):
 
     @staticmethod
     def create_user(form: RegisterForm) -> Users:
-        user = Users(
-            username=form.username.data,
-            email=form.email.data,
-            password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"),
-        )
+        user = Users(username=form.username.data,
+                     email=form.email.data,
+                     password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"),)
         return user
+
+class Products(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_name = db.Column(db.String)
+    date_added = db.Column(db.DateTime)
+    current_price = db.Column(db.String)
+    lowest_price = db.Column(db.String)
