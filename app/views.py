@@ -1,3 +1,4 @@
+import dashboard as dashboard
 from flask import request, render_template
 from .forms import RegisterForm, LoginForm
 from .models import Users
@@ -45,3 +46,10 @@ class Login(MethodView):
                 login_user(user)
                 return "You are logged"
         return "Incorrect data"
+
+class Dashboard(MethodView):
+    def __init__(self):
+        self.template_name = 'dashboard.html'
+
+    def get(self):
+        return render_template(self.template_name)
