@@ -1,4 +1,3 @@
-import dashboard as dashboard
 from flask import request, render_template
 from .forms import RegisterForm, LoginForm
 from .models import Users

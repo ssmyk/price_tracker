@@ -320,8 +320,8 @@ small {
 .col-xl-8,
 .col-xl-9,
 .col-xl-auto {
-    padding-right: 12.5px;
-    padding-left: 12.5px;
+    padding-right: 60px;
+    padding-left: 60px;
 }
 
 
@@ -777,6 +777,8 @@ body.bg-theme15 {
     margin-left: 20px;
     position: relative;
     width: 530px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .search-bar input {
@@ -860,8 +862,9 @@ body.bg-theme15 {
 .card-header {
     padding: .75rem 1.25rem;
     margin-bottom: 0;
+    margin-top: 0;
     background: transparent;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 10px solid rgba(255, 255, 255, 0.12);
     font-weight: 600;
     font-size: 14px;
     color: #ffffff;
@@ -4077,6 +4080,7 @@ table.grid td {
     .search-bar input {
         width: 100%;
         height: 30px;
+
     }
     .nav-tabs .nav-link {
         padding: 10px 10px;
