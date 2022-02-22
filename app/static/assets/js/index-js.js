@@ -7,7 +7,6 @@ function add_item() {
     if (is_correct) {
         //document.write('Link poprawny')
         document.getElementById("validator").innerHTML = 'Link poprawny'
-
         // jezeli response bedzie zawieral OK to wtedy odswiezamy
         // NOK wywalamy komunikat
     } else {
@@ -23,3 +22,4 @@ function validate_url(url) {
     }
     return false
 }
+

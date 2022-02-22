@@ -1,8 +1,8 @@
-from flask import request, render_template
+from flask import request, render_template, redirect, url_for
 from .forms import RegisterForm, LoginForm
-from .models import Users
+from .models import *
 from . import lm, bcrypt
-from flask_login import login_user
+from flask_login import login_user, UserMixin, current_user
 from flask.views import MethodView
 
 
@@ -23,7 +23,7 @@ class Register(MethodView):
         if form.validate():
             if not Users.email_validator(form.email.data):
                 user = Users.create_user(form)
-                Users.add_to_db(user)
+                add_to_db(user)
                 return "You account has been created"
             return "Email is already registered"
         return render_template(self.template_name, form=form)
@@ -34,6 +34,9 @@ class Login(MethodView):
         self.template_name = 'login.html'
 
     def get(self):
+        if current_user.is_authenticated:
+            return render_template('dashboard.html',user=current_user,products = Products.query.all())
+
         form = LoginForm()
         return render_template(self.template_name, form=form)
 
@@ -43,7 +46,7 @@ class Login(MethodView):
             user = Users.query.filter_by(email=form.email.data).first()
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return "You are logged"
+                return render_template('dashboard.html',user=user)
         return "Incorrect data"
 
 class Dashboard(MethodView):
@@ -51,4 +54,7 @@ class Dashboard(MethodView):
         self.template_name = 'dashboard.html'
 
     def get(self):
-        return render_template(self.template_name)
+        products = Products.query.all()
+        return render_template(self.template_name, products=products)
+
+

@@ -12,6 +12,11 @@ def create_db() -> None:
             db.create_all()
 
 
+def add_to_db(db_entry: Users | Products) -> None:
+    db.session.add(db_entry)
+    db.session.commit()
+
+
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String)
@@ -24,26 +29,32 @@ class Users(db.Model, UserMixin):
         self.password = password
 
     @staticmethod
-    def add_to_db(user: Users) -> None:
-        db.session.add(user)
-        db.session.commit()
-
-    @staticmethod
     def email_validator(email: str) -> bool:
         if Users.query.filter_by(email=email).first():
             return True
         return False
 
+
     @staticmethod
     def create_user(form: RegisterForm) -> Users:
         user = Users(username=form.username.data,
                      email=form.email.data,
-                     password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"),)
+                     password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"), )
         return user
+
 
 class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String)
+    product_asin = db.Column(db.String, unique=True)
     date_added = db.Column(db.DateTime)
     current_price = db.Column(db.String)
     lowest_price = db.Column(db.String)
+
+
+    def __init__(self, product_name, product_asin, date_added, current_price, lowest_price):
+        self.product_name = product_name
+        self.product_asin = product_asin
+        self.date_added = date_added
+        self.current_price = current_price
+        self.lowest_price = lowest_price
