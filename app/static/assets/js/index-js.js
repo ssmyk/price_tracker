@@ -17,9 +17,16 @@ function add_item() {
 
 function validate_url(url) {
     re = /^(http:\/\/|https:\/\/)?(www\.amazon\.|amazon\.).+\/dp\/[0-9A-Z]{10}/
-    if (url.match(re)) {
-        return true
-    }
-    return false
+    return url.match(re)
 }
 
+function delete_item(product_id){
+    console.log(product_id);
+    product_id = product_id.replace('-delete','')
+    console.log(product_id);
+    tr_to_delete = product_id + "-tr"
+
+    // find tr with such tr_to_delete in
+    // delete
+    // send request to api
+}

@@ -35,7 +35,8 @@ class Login(MethodView):
 
     def get(self):
         if current_user.is_authenticated:
-            return render_template('dashboard.html',user=current_user,products = Products.query.all())
+            #return render_template('dashboard.html',products = Products.query.all())
+            return redirect(url_for('dashboard'))
 
         form = LoginForm()
         return render_template(self.template_name, form=form)

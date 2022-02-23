@@ -8,8 +8,11 @@
                 <div class="col-12 col-lg-12" style='display:flex'>
                     <div class="card" >
                         <div class="card-header" style='display:flex'>
-                            <h5>Logged as: {{ user.username }}  </h5>
-                            <h5><a onclick="add_item()"><i class="icon-power mr-2"></i></a></h5>
+                            <h5>Logged as: {{ current_user.username }}  </h5>
+
+                            <h5><a onclick="user_logout()"><i class="icon-power mr-2"></i></a></h5>
+                            <!-- Needs implementation of user logout -->
+
                         </div>
                     </div>
                 </div>
@@ -19,11 +22,9 @@
 
     <div class="content-wrapper">
         <div class="container-fluid">
-            <!--Start Dashboard Content-->
             <div class="row">
                 <div class="col-12 col-lg-12">
                     <div class="card">
-
                         <div class="card-header">
                             <h5>Tracked products</h5>
                             <div style='display:flex'>
@@ -53,14 +54,20 @@
                                 </thead>
                                 <tbody>
                                 {% for product in products %}
-                                <tr>
+                                <tr id="{{ product.id }}-tr">
                                     <td>{{ product.product_name }}</td>
+
                                     <td><img src="https://m.media-amazon.com/images/I/81IWsqrVMTL._AC_SL1500_.jpg" class="product-img" alt="product img"></td>
+                                    <!-- Temporary solution to display product image -->
+
                                     <td>{{ product.product_asin }}</td>
                                     <td>{{ product.date_added }}</td>
                                     <td>{{ product.current_price }}</td>
                                     <td>{{ product.lowest_price }}</td>
-                                    <td><a onclick="delete_item()"><i class="zmdi zmdi-block"></i></a></td>
+
+                                    <td><a id="{{ product.id }}-delete" onclick="delete_item(this.id)"><i class="zmdi zmdi-block"></i></a></td>
+                                    <!-- Needs implementation of product removal -->
+
                                 </tr>
                                 {% endfor %}
                                 </tbody>
