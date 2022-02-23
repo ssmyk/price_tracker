@@ -18,6 +18,6 @@ def create_app():
 
     app.add_url_rule("/register", view_func=Register.as_view("register"))
     app.add_url_rule("/login", view_func=Login.as_view("login"))
-    app.add_url_rule("/dashboard", view_func=Dashboard.as_view("dashboard"))
+    #app.add_url_rule("/dashboard", view_func=Dashboard.as_view("dashboard"))
 
     return app

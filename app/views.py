@@ -46,7 +46,7 @@ class Login(MethodView):
             user = Users.query.filter_by(email=form.email.data).first()
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return render_template('dashboard.html',user=user)
+                return render_template('dashboard.html',user=user, products = Products.query.all())
         return "Incorrect data"
 
 class Dashboard(MethodView):

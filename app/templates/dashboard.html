@@ -30,7 +30,7 @@
                                 <ul class="navbar-nav mr-auto align-items-left">
                                     <li class="nav-item">
                                         <form class="search-bar">
-                                            <input type="text" class="form-control" placeholder="Enter keywords">
+                                            <input type="text" class="form-control" placeholder="Paste link to product">
                                             <a onclick="add_item()"><i class="icon-magnifier"></i></a>
                                         </form>
                                     </li>
@@ -55,7 +55,7 @@
                                 {% for product in products %}
                                 <tr>
                                     <td>{{ product.product_name }}</td>
-                                    <td><img src="https://via.placeholder.com/110x110" class="product-img" alt="product img"></td>
+                                    <td><img src="https://m.media-amazon.com/images/I/81IWsqrVMTL._AC_SL1500_.jpg" class="product-img" alt="product img"></td>
                                     <td>{{ product.product_asin }}</td>
                                     <td>{{ product.date_added }}</td>
                                     <td>{{ product.current_price }}</td>
