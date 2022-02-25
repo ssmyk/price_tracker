@@ -58,11 +58,11 @@ class Products(db.Model):
     #fk_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
-
-
     def __init__(self, product_name, product_asin, date_added, current_price, lowest_price):
         self.product_name = product_name
         self.product_asin = product_asin
         self.date_added = date_added
         self.current_price = current_price
         self.lowest_price = lowest_price
+
+

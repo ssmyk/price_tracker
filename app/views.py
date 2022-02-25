@@ -2,7 +2,7 @@ from flask import request, render_template, redirect, url_for
 from .forms import RegisterForm, LoginForm
 from .models import *
 from . import lm, bcrypt
-from flask_login import login_user, UserMixin, current_user
+from flask_login import login_user, UserMixin, current_user, logout_user, login_required
 from flask.views import MethodView
 
 
@@ -47,15 +47,22 @@ class Login(MethodView):
             user = Users.query.filter_by(email=form.email.data).first()
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return render_template('dashboard.html',user=user, products = Products.query.all())
+                return redirect(url_for('dashboard'))
         return "Incorrect data"
 
 class Dashboard(MethodView):
     def __init__(self):
         self.template_name = 'dashboard.html'
 
+    @login_required
     def get(self):
         products = Products.query.all()
         return render_template(self.template_name, products=products)
 
+
+class Logout(MethodView):
+
+    def get(self):
+        logout_user()
+        return redirect(url_for('login'))
 
