@@ -1,16 +1,16 @@
 from __future__ import annotations
 from flask_login import UserMixin
-from . import db, app, bcrypt
-import os
+from . import db, bcrypt
+#import os
 from .forms import RegisterForm
-from .config import DBConfig
+#from .config import DBConfig
 
-
+'''
 def create_db() -> None:
-    if not os.path.exists(DBConfig.DB_NAME):
+    if not os.path.exists('users.sqlite3'):
         with app.app_context():
             db.create_all()
-
+'''
 
 def add_to_db(db_entry: Users | Products) -> None:
     db.session.add(db_entry)
@@ -24,12 +24,13 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
-    #products = db.relationship('products', backref='products', lazy=True)
+    products = db.relationship('Products', backref='users', lazy=True)
 
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
         self.password = password
+
 
     @staticmethod
     def email_validator(email: str) -> bool:
@@ -54,15 +55,20 @@ class Products(db.Model):
     product_asin = db.Column(db.String, unique=True)
     date_added = db.Column(db.DateTime)
     current_price = db.Column(db.String)
+    current_price_date = db.Column(db.DateTime)
     lowest_price = db.Column(db.String)
-    #fk_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    lowest_price_date = db.Column(db.DateTime)
+    fk_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
-    def __init__(self, product_name, product_asin, date_added, current_price, lowest_price):
+    def __init__(self, product_name, product_asin, date_added, current_price, current_price_date, lowest_price, lowest_price_date, fk_user):
         self.product_name = product_name
         self.product_asin = product_asin
         self.date_added = date_added
         self.current_price = current_price
+        self.current_price_date = current_price_date
         self.lowest_price = lowest_price
+        self.lowest_price_date = lowest_price_date
+        self.fk_user = fk_user
 
 
