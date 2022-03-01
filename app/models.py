@@ -1,9 +1,11 @@
 from __future__ import annotations
 from flask_login import UserMixin
-from . import db, bcrypt
+from . import db, bcrypt, ma
 #import os
 from .forms import RegisterForm
 #from .config import DBConfig
+from flask_marshmallow import fields
+
 
 '''
 def create_db() -> None:
@@ -14,6 +16,10 @@ def create_db() -> None:
 
 def add_to_db(db_entry: Users | Products) -> None:
     db.session.add(db_entry)
+    db.session.commit()
+
+def delete_from_db(db_entry: Users | Products) -> None:
+    db.session.delete(db_entry)
     db.session.commit()
 
 
@@ -43,8 +49,17 @@ class Users(db.Model, UserMixin):
     def create_user(form: RegisterForm) -> Users:
         user = Users(username=form.username.data,
                      email=form.email.data,
-                     password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"), )
+                     password=bcrypt.generate_password_hash(form.password.data).decode("utf-8") )
         return user
+
+    @staticmethod
+    def create_from_json(json_body: dict) -> Users:
+
+        return Users(
+            username=json_body['username'],
+            email=json_body['email'],
+            password=json_body['password']
+        )
 
 
 class Products(db.Model):
@@ -54,9 +69,9 @@ class Products(db.Model):
     product_name = db.Column(db.String)
     product_asin = db.Column(db.String, unique=True)
     date_added = db.Column(db.DateTime)
-    current_price = db.Column(db.String)
+    current_price = db.Column(db.Float)
     current_price_date = db.Column(db.DateTime)
-    lowest_price = db.Column(db.String)
+    lowest_price = db.Column(db.Float)
     lowest_price_date = db.Column(db.DateTime)
     fk_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
@@ -71,4 +86,32 @@ class Products(db.Model):
         self.lowest_price_date = lowest_price_date
         self.fk_user = fk_user
 
+    @staticmethod
+    def create_from_json(json_body: dict) -> Products:
+        return Products(
+        product_name = json_body['product_name'],
+        product_asin = json_body['product_asin'],
+        date_added = json_body['date_added'],
+        current_price = json_body['current_price'],
+        current_price_date = json_body['current_price_date'],
+        lowest_price = json_body['lowest_price'],
+        lowest_price_date = json_body['lowest_price_date'],
+        fk_user = json_body['fk_user']
+        )
 
+class UserSchema(ma.Schema):
+    _id = fields.fields.Integer()
+    username = fields.fields.Str()
+    email = fields.fields.Str()
+    password = fields.fields.Str()
+
+class ProductSchema(ma.Schema):
+    _id = fields.fields.Integer()
+    product_name = fields.fields.Str()
+    product_asin = fields.fields.Str()
+    date_added = fields.fields.DateTime()
+    current_price = fields.fields.Float()
+    current_price_date = fields.fields.DateTime()
+    lowest_price = fields.fields.Float()
+    lowest_price_date = fields.fields.DateTime()
+    fk_user = fields.fields.Integer()

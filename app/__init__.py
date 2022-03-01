@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from .config import Config
 from flask_migrate import Migrate
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -11,7 +12,7 @@ db = SQLAlchemy(app)
 lm = LoginManager(app)
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
-
+ma = Marshmallow(app)
 
 def create_app():
 
@@ -22,8 +23,13 @@ def create_app():
     app.add_url_rule("/logout", view_func=Logout.as_view("logout"))
 
     user_view = UsersAPI.as_view('user_api')
-    app.add_url_rule('/users/', defaults={'user_id': None}, view_func=user_view, methods=['GET', ])
-    app.add_url_rule('/users/', view_func=user_view, methods=['POST', ])
+    app.add_url_rule('/users/', defaults={'user_id': None}, view_func=user_view, methods=['GET'])
+    app.add_url_rule('/users/', view_func=user_view, methods=['POST'])
     app.add_url_rule('/users/<int:user_id>', view_func=user_view, methods=['GET', 'DELETE'])
+
+    product_view = ProductsAPI.as_view('product_api')
+    app.add_url_rule('/products/', defaults={'product_id': None}, view_func=product_view, methods=['GET'])
+    app.add_url_rule('/products/', view_func=product_view, methods=['POST'])
+    app.add_url_rule('/products/<int:product_id>', view_func=product_view, methods=['GET', 'DELETE'])
 
     return app

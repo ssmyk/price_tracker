@@ -2,9 +2,13 @@ from flask import request, render_template, redirect, url_for
 from .forms import RegisterForm, LoginForm
 from .models import *
 from . import lm, bcrypt
-from flask_login import login_user, UserMixin, current_user, logout_user, login_required
+from flask_login import login_user, current_user, logout_user, login_required
 from flask.views import MethodView
 
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
+product_schema = ProductSchema()
+products_schema = ProductSchema(many=True)
 
 @lm.user_loader
 def load_user(user_id):
@@ -35,7 +39,6 @@ class Login(MethodView):
 
     def get(self):
         if current_user.is_authenticated:
-            #return render_template('dashboard.html',products = Products.query.all())
             return redirect(url_for('dashboard'))
 
         form = LoginForm()
@@ -70,24 +73,38 @@ class Logout(MethodView):
 class UsersAPI(MethodView):
     def get(self, user_id):
         if user_id is None:
-            pass
-        pass
+            all_users = Users.query.all()
+            return users_schema.jsonify(all_users)
+        found_user = Users.query.get(user_id)
+        return user_schema.jsonify(found_user)
 
     def post(self):
-        pass
+        body = request.json
+        new_user = Users.create_from_json(json_body=body)
+        add_to_db(new_user)
+        return user_schema.jsonify(new_user)
 
     def delete(self, user_id):
-        pass
+        user_to_delete = Users.query.get(user_id)
+        delete_from_db(user_to_delete)
+        return user_schema.jsonify(user_to_delete)
 
 class ProductsAPI(MethodView):
     def get(self, product_id):
         if product_id is None:
-            pass
-        pass
+            all_products = Products.query.all()
+            return products_schema.jsonify(all_products)
+        found_product = Products.query.get(product_id)
+        return product_schema.jsonify(found_product)
 
     def post(self):
-        pass
+        body = request.json
+        new_product = Products.create_from_json(json_body=body)
+        add_to_db(new_product)
+        return user_schema.jsonify(new_product)
 
     def delete(self, product_id):
-        pass
+        product_to_delete = Products.query.get(product_id)
+        delete_from_db(product_to_delete)
+        return user_schema.jsonify(product_to_delete)
 
