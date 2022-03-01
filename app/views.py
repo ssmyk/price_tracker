@@ -66,3 +66,28 @@ class Logout(MethodView):
         logout_user()
         return redirect(url_for('login'))
 
+
+class UsersAPI(MethodView):
+    def get(self, user_id):
+        if user_id is None:
+            pass
+        pass
+
+    def post(self):
+        pass
+
+    def delete(self, user_id):
+        pass
+
+class ProductsAPI(MethodView):
+    def get(self, product_id):
+        if product_id is None:
+            pass
+        pass
+
+    def post(self):
+        pass
+
+    def delete(self, product_id):
+        pass
+
