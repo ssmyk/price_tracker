@@ -6,16 +6,17 @@ from .config import Config
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
 
-app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-lm = LoginManager(app)
-bcrypt = Bcrypt(app)
-migrate = Migrate(app, db)
-ma = Marshmallow(app)
+
+
+db = SQLAlchemy()
+lm = LoginManager()
+bcrypt = Bcrypt()
+migrate = Migrate()
+ma = Marshmallow()
 
 def create_app():
-
+    app = Flask(__name__)
+    app.config.from_object(Config)
     from .views import Register, Login, Dashboard, Logout, UsersAPI, ProductsAPI
     app.add_url_rule("/register", view_func=Register.as_view("register"))
     app.add_url_rule("/login", view_func=Login.as_view("login"))
@@ -31,5 +32,11 @@ def create_app():
     app.add_url_rule('/products/', defaults={'product_id': None}, view_func=product_view, methods=['GET'])
     app.add_url_rule('/products/', view_func=product_view, methods=['POST'])
     app.add_url_rule('/products/<int:product_id>', view_func=product_view, methods=['GET', 'DELETE'])
+
+    db.init_app(app)
+    lm.init_app(app)
+    bcrypt.init_app(app)
+    migrate.init_app(app,db)
+    ma.init_app(app)
 
     return app

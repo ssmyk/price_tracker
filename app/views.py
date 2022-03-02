@@ -64,13 +64,13 @@ class Dashboard(MethodView):
 
 
 class Logout(MethodView):
-
     def get(self):
         logout_user()
         return redirect(url_for('login'))
 
 
 class UsersAPI(MethodView):
+    @login_required
     def get(self, user_id):
         if user_id is None:
             all_users = Users.query.all()

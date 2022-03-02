@@ -20,11 +20,26 @@ function validate_url(url) {
     return url.match(re)
 }
 
-function delete_item(product_id){
-    console.log(product_id);
-    product_id = product_id.replace('-delete','')
-    console.log(product_id);
+async function delete_item(product_id){
+    //console.log(product_id);
+    //product_id = product_id.replace('-delete','')
+    //console.log(product_id);
     tr_to_delete = product_id + "-tr"
+    //console.log(tr_to_delete);
+
+    delete_enpoint = 'http://10.1.1.11:5000/products/' + product_id
+
+    document.getElementById(tr_to_delete).remove()
+    resp = await fetch(delete_enpoint, {method: 'DELETE'});
+    if(resp.status == 200){
+        // ok
+    }
+    else {
+        // wrong
+    }
+    console.log("dupa", resp.status);
+
+    //console.log(document.getElementById(tr_to_delete))
 
     // find tr with such tr_to_delete in
     // delete

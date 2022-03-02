@@ -45,7 +45,9 @@
                                     <th>Product ASIN</th>
                                     <th>Date added</th>
                                     <th>The lowest price</th>
+                                    <th>The lowest price date</th>
                                     <th>Current price</th>
+                                    <th>Current price date</th>
                                     <th>Delete</th>
                                 </tr>
                                 </thead>
@@ -53,18 +55,15 @@
                                 {% for product in products %}
                                 <tr id="{{ product.id }}-tr">
                                     <td>{{ product.product_name }}</td>
-
                                     <td><img src="https://m.media-amazon.com/images/I/81IWsqrVMTL._AC_SL1500_.jpg" class="product-img" alt="product img"></td>
-                                    <!-- Temporary solution to display product image -->
-
                                     <td>{{ product.product_asin }}</td>
                                     <td>{{ product.date_added }}</td>
-                                    <td>{{ product.current_price }}</td>
                                     <td>{{ product.lowest_price }}</td>
-
-                                    <td><a id="{{ product.id }}-delete" onclick="delete_item(this.id)"><i class="zmdi zmdi-block"></i></a></td>
-                                    <!-- Needs implementation of product removal -->
-
+                                    <td>{{ product.lowest_price_date }}</td>
+                                    <td>{{ product.current_price }}</td>
+                                    <td>{{ product.current_price_date }}</td>
+                                    <!-- <td><button id="{{ product.id }}-delete" onclick="delete_item(this.id)"><i class="zmdi zmdi-block"></i></button></td> -->
+                                    <td><button onclick="delete_item({{ product.id }})"><i class="zmdi zmdi-block"></i></button></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>

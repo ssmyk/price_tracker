@@ -1,11 +1,10 @@
 from __future__ import annotations
 from flask_login import UserMixin
 from . import db, bcrypt, ma
-#import os
+# import os
 from .forms import RegisterForm
-#from .config import DBConfig
+# from .config import DBConfig
 from flask_marshmallow import fields
-
 
 '''
 def create_db() -> None:
@@ -14,9 +13,11 @@ def create_db() -> None:
             db.create_all()
 '''
 
+
 def add_to_db(db_entry: Users | Products) -> None:
     db.session.add(db_entry)
     db.session.commit()
+
 
 def delete_from_db(db_entry: Users | Products) -> None:
     db.session.delete(db_entry)
@@ -37,24 +38,21 @@ class Users(db.Model, UserMixin):
         self.email = email
         self.password = password
 
-
     @staticmethod
     def email_validator(email: str) -> bool:
         if Users.query.filter_by(email=email).first():
             return True
         return False
 
-
     @staticmethod
     def create_user(form: RegisterForm) -> Users:
         user = Users(username=form.username.data,
                      email=form.email.data,
-                     password=bcrypt.generate_password_hash(form.password.data).decode("utf-8") )
+                     password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"))
         return user
 
     @staticmethod
     def create_from_json(json_body: dict) -> Users:
-
         return Users(
             username=json_body['username'],
             email=json_body['email'],
@@ -75,8 +73,8 @@ class Products(db.Model):
     lowest_price_date = db.Column(db.DateTime)
     fk_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-
-    def __init__(self, product_name, product_asin, date_added, current_price, current_price_date, lowest_price, lowest_price_date, fk_user):
+    def __init__(self, product_name, product_asin, date_added, current_price, current_price_date, lowest_price,
+                 lowest_price_date, fk_user):
         self.product_name = product_name
         self.product_asin = product_asin
         self.date_added = date_added
@@ -89,21 +87,23 @@ class Products(db.Model):
     @staticmethod
     def create_from_json(json_body: dict) -> Products:
         return Products(
-        product_name = json_body['product_name'],
-        product_asin = json_body['product_asin'],
-        date_added = json_body['date_added'],
-        current_price = json_body['current_price'],
-        current_price_date = json_body['current_price_date'],
-        lowest_price = json_body['lowest_price'],
-        lowest_price_date = json_body['lowest_price_date'],
-        fk_user = json_body['fk_user']
+            product_name=json_body['product_name'],
+            product_asin=json_body['product_asin'],
+            date_added=json_body['date_added'],
+            current_price=json_body['current_price'],
+            current_price_date=json_body['current_price_date'],
+            lowest_price=json_body['lowest_price'],
+            lowest_price_date=json_body['lowest_price_date'],
+            fk_user=json_body['fk_user']
         )
+
 
 class UserSchema(ma.Schema):
     _id = fields.fields.Integer()
     username = fields.fields.Str()
     email = fields.fields.Str()
     password = fields.fields.Str()
+
 
 class ProductSchema(ma.Schema):
     _id = fields.fields.Integer()
