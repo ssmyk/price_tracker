@@ -6,8 +6,6 @@ from .config import Config
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
 
-
-
 db = SQLAlchemy()
 lm = LoginManager()
 bcrypt = Bcrypt()
@@ -17,6 +15,7 @@ ma = Marshmallow()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
     from .views import Register, Login, Dashboard, Logout, UsersAPI, ProductsAPI
     app.add_url_rule("/register", view_func=Register.as_view("register"))
     app.add_url_rule("/login", view_func=Login.as_view("login"))

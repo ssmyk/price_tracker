@@ -13,7 +13,7 @@ requests.post('http://localhost:5000/users/',json={
 
 requests.post('http://localhost:5000/products/',json={
     'product_name' : 'Motorola XYZ',
-    'product_asin' : 'SH11SXZJENG',
+    'product_asin' : '2FFFSR3JE3G',
     'date_added' : '2021-12-12 13:24:22',
     'current_price' : '2394.43',
     'current_price_date' : '2021-12-12 13:24:22',

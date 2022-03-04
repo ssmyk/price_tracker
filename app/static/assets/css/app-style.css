@@ -324,6 +324,11 @@ small {
     padding-left: 60px;
 }
 
+tr {
+    text-align: center;
+    vertical-align: middle;
+}
+
 
 /* Menu Sidebar Wrapper */
 
@@ -2167,8 +2172,8 @@ table.grid td {
 
 .card .table td,
 .card .table th {
-    padding-right: 1.5rem;
-    padding-left: 1.5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
 }
 
 .table {

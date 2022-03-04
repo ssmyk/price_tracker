@@ -92,19 +92,33 @@ class UsersAPI(MethodView):
 class ProductsAPI(MethodView):
     def get(self, product_id):
         if product_id is None:
-            all_products = Products.query.all()
-            return products_schema.jsonify(all_products)
-        found_product = Products.query.get(product_id)
-        return product_schema.jsonify(found_product)
+            try:
+                all_products = Products.query.all()
+                return products_schema.jsonify(all_products), 200
+            except:
+                return 'Internal error', 500
+        try:
+            found_product = Products.query.get(product_id)
+            return product_schema.jsonify(found_product), 200
+        except:
+            return 'Internal error', 500
 
     def post(self):
-        body = request.json
-        new_product = Products.create_from_json(json_body=body)
-        add_to_db(new_product)
-        return user_schema.jsonify(new_product)
+        try:
+            body = request.json
+            new_product = Products.create_from_json(json_body=body)
+            add_to_db(new_product)
+            return user_schema.jsonify(new_product), 200
+        except:
+            return 'Internal error', 500
+
 
     def delete(self, product_id):
-        product_to_delete = Products.query.get(product_id)
-        delete_from_db(product_to_delete)
-        return user_schema.jsonify(product_to_delete)
+        try:
+            product_to_delete = Products.query.get(product_id)
+            delete_from_db(product_to_delete)
+            return user_schema.jsonify(product_to_delete), 200
+        except:
+            return 'Internal error', 500
+
 
