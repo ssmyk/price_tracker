@@ -137,7 +137,7 @@ h4 {
 .h5,
 h5 {
     font-size: 18px;
-    line-height: 30px;
+    line-height: 40px;
 }
 
 .h6,
@@ -978,7 +978,7 @@ body.bg-theme15 {
 /*Buttons */
 
 .btn {
-    font-size: .70rem;
+    font-size: .90rem;
     font-weight: 500;
     letter-spacing: 1px;
     padding: 9px 19px;

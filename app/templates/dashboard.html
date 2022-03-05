@@ -9,7 +9,7 @@
                     <div class="card" >
                         <div class="card-header" style='display:flex'>
                             <h5>Logged as: {{current_user.username}} &nbsp;</h5>
-                            <h5><a href="logout" class="icon-power mr-2"></a></h5>
+                            <h5><a class="btn btn-light px-2" href="logout"><i class="icon-power"></i></a></h5>
                         </div>
                     </div>
                 </div>
@@ -58,12 +58,11 @@
                                     <td><img src="https://m.media-amazon.com/images/I/81IWsqrVMTL._AC_SL1500_.jpg" class="product-img" alt="product img"></td>
                                     <td>{{ product.product_asin }}</td>
                                     <td>{{ product.date_added }}</td>
-                                    <td>{{ product.lowest_price }}</td>
+                                    <td>{{ product.lowest_price }} PLN</td>
                                     <td>{{ product.lowest_price_date }}</td>
-                                    <td>{{ product.current_price }}</td>
+                                    <td>{{ product.current_price }} PLN</td>
                                     <td>{{ product.current_price_date }}</td>
-                                    <!-- <td><button id="{{ product.id }}-delete" onclick="delete_item(this.id)"><i class="zmdi zmdi-block"></i></button></td> -->
-                                    <td><button onclick="delete_item({{ product.id }})"><i class="zmdi zmdi-block"></i></button></td>
+                                    <td><button onclick="delete_item({{ product.id }})" class="btn btn-light px-3"><i class="zmdi zmdi-block"></i></button></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
