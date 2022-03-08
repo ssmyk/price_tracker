@@ -25,11 +25,13 @@ async function delete_item(product_id){
     //product_id = product_id.replace('-delete','')
     tr_to_delete = product_id + "-tr"
     //console.log(tr_to_delete);
-    delete_endpoint = 'http://10.1.1.11:5000/products/' + product_id
+    delete_endpoint = 'http://10.48.21.69:5000/products/' + product_id
     //console.log(delete_endpoint);
-    document.getElementById(tr_to_delete).remove()
+
     resp = await fetch(delete_endpoint, {method: 'DELETE'});
+    console.log(resp.status)
     if(resp.status == 200){
+        document.getElementById(tr_to_delete).remove()
         document.getElementById("validator").innerHTML = 'Product was removed'
     }
     else {

@@ -1,4 +1,4 @@
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for, flash
 from .forms import RegisterForm, LoginForm
 from .models import *
 from . import lm, bcrypt
@@ -28,8 +28,10 @@ class Register(MethodView):
             if not Users.email_validator(form.email.data):
                 user = Users.create_user(form)
                 add_to_db(user)
-                return "You account has been created"
-            return "Email is already registered"
+                flash("You account has been created")
+                return redirect(url_for('login'))
+            flash ("Email is already registered")
+            return redirect(url_for('register'))
         return render_template(self.template_name, form=form)
 
 
@@ -46,12 +48,17 @@ class Login(MethodView):
 
     def post(self):
         form = LoginForm(request.form)
-        if Users.email_validator(form.email.data):
+        if not Users.email_validator(form.email.data):
+            flash('User not registered')
+            return redirect(url_for('login'))
+        else:
             user = Users.query.filter_by(email=form.email.data).first()
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
                 return redirect(url_for('dashboard'))
-        return "Incorrect data"
+        flash('Invalid password provided')
+        return redirect(url_for('login'))
+
 
 class Dashboard(MethodView):
     def __init__(self):
@@ -66,6 +73,7 @@ class Dashboard(MethodView):
 class Logout(MethodView):
     def get(self):
         logout_user()
+        flash('You have been logged out')
         return redirect(url_for('login'))
 
 

@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
-page_url = 'https://www.amazon.pl/Samsung-SM-G998BZSGEUE-Galaxy-Smartfon-Srebrny/dp/B08Q8MDFR1/'
+page_url = 'https://www.amazon.pl/Sony-WH-1000XM4-bezprzewodowe-sluchawki-sterowanie/dp/B08C7KG5LP'
 page = requests.get(page_url, timeout=None)
 soup = BeautifulSoup(page.content, 'html.parser')
 product_name = soup.title.string.split(':')[0]
