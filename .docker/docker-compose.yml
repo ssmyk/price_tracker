@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  web:
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile
+    ports:
+      - "5000:5000"
+    container_name: price_tracker
+    hostname: price_tracker
+    command: ["python3", "run.py"]
+    depends_on:
+      web_db:
+        condition: service_healthy
+  web_db:
+    image: postgres:14
+    container_name: web_db
+    hostname: web_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER='postgres'
+      - POSTGRES_PASSWORD='postgres'
+      - POSTGRES_DB='price_tracker'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 30s
+      retries: 6
+    restart: always

@@ -23,19 +23,24 @@ function validate_url(url) {
 async function delete_item(product_id){
     //console.log(product_id);
     //product_id = product_id.replace('-delete','')
-    tr_to_delete = product_id + "-tr"
+    tr_to_delete = product_id + "-tr";
     //console.log(tr_to_delete);
-    delete_endpoint = 'http://10.48.21.69:5000/products/' + product_id
+    delete_endpoint = 'http://100.48.21.69:5000/prod1ucts/' + product_id;
     //console.log(delete_endpoint);
 
-    resp = await fetch(delete_endpoint, {method: 'DELETE'});
+    try{
+        resp = await fetch(delete_endpoint, {method: 'DELETE'});
+    } catch(e){
+        document.getElementById("validator").innerHTML = 'Service unavailable';
+        return
+    }
     console.log(resp.status)
     if(resp.status == 200){
-        document.getElementById(tr_to_delete).remove()
-        document.getElementById("validator").innerHTML = 'Product was removed'
+        document.getElementById(tr_to_delete).remove();
+        document.getElementById("validator").innerHTML = 'Product was removed';
     }
     else {
-        document.getElementById("validator").innerHTML = 'Internal error'
+        document.getElementById("validator").innerHTML = 'Internal error';
     }
 
 
