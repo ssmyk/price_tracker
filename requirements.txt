@@ -1,0 +1,10 @@
+flask
+flask_sqlalchemy
+flask_login
+flask_bcrypt
+python_decouple
+flask_migrate
+flask_marshmallow
+wtforms
+email_validator
+psycopg2
