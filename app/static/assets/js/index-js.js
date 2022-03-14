@@ -25,7 +25,8 @@ async function delete_item(product_id){
     //product_id = product_id.replace('-delete','')
     tr_to_delete = product_id + "-tr";
     //console.log(tr_to_delete);
-    delete_endpoint = 'http://localhost:5000/products/' + product_id;
+    console.log(window.location.host)
+    delete_endpoint = 'http://' + window.location.host + '/products/' + product_id;
     //console.log(delete_endpoint);
 
     try{

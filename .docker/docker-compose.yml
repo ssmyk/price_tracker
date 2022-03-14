@@ -14,7 +14,9 @@ services:
       web_db:
         condition: service_healthy
     volumes:
-      - C:\Users\Sebastian\PycharmProjects\price_tracker\:/app
+      - pt:/pt
+      - C:\Users\Sebastian\PycharmProjects\price_tracker:/app
+
     environment:
       FLASK_ENV: development
 
@@ -35,3 +37,6 @@ services:
       timeout: 30s
       retries: 6
     restart: always
+volumes:
+  pt:
+    external: true

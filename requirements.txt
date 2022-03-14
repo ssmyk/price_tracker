@@ -8,3 +8,4 @@ flask_marshmallow
 wtforms
 email_validator
 psycopg2
+requests
