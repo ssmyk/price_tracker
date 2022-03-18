@@ -1,4 +1,8 @@
 version: '3.9'
+networks:
+  iservices:
+    external:
+      name: TrackingServices
 services:
   web:
     build:
@@ -6,7 +10,10 @@ services:
       dockerfile: .docker/Dockerfile
     ports:
       - "5000:5000"
-
+    networks:
+      iservices:
+        aliases:
+          - tracking-backend
     container_name: price_tracker
     hostname: price_tracker
     command: ["python3", "run.py"]
@@ -26,6 +33,10 @@ services:
     hostname: web_db
     ports:
       - "5433:5432"
+    networks:
+      iservices:
+        aliases:
+          - tracking-db-backend
     environment:
       #- POSTGRES_USER=price_tracker
       - POSTGRES_PASSWORD=postgres
