@@ -4,7 +4,7 @@ networks:
     external:
       name: TrackingServices
 services:
-  web:
+  web_app:
     build:
       context: ../
       dockerfile: .docker/Dockerfile
@@ -14,18 +14,16 @@ services:
       iservices:
         aliases:
           - tracking-backend
-    container_name: price_tracker
-    hostname: price_tracker
+    container_name: web_app
+    hostname: web_app
     command: ["python3", "run.py"]
     depends_on:
       web_db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     volumes:
-      - pt:/pt
-      - C:\Users\Sebastian\PycharmProjects\price_tracker:/app
-
-    environment:
-      FLASK_ENV: development
+      - C:\Users\ssmyk\PycharmProjects\price_tracker:/app
 
   web_db:
     image: postgres:14
@@ -52,13 +50,22 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
+    hostname: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      iservices:
+        aliases:
+          - tracking-rabbitmq
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 1s
+      timeout: 3s
+      retries: 30
 
-volumes:
-  pt:
-    external: true
+
+

@@ -8,7 +8,7 @@
                 <div class="col-12 col-lg-12" style='display:flex'>
                     <div class="card" >
                         <div class="card-header" style='display:flex'>
-                            <h5>{{current_user.username}} &nbsp;</h5>
+                            <h5>{{current_user.username}}</h5>
                             <a class="btn btn-light px-2" href="logout">Log Out <i class="icon-power"></i></a>
                         </div>
                     </div>
@@ -48,6 +48,7 @@
                                     <th>The lowest price date</th>
                                     <th>Current price</th>
                                     <th>Current price date</th>
+                                    <th>User_id</th>
                                     <th>Delete</th>
                                 </tr>
                                 </thead>
@@ -55,7 +56,6 @@
                                 {% for product in products %}
                                 <tr id="{{ product.id }}-tr">
                                     <td class="product-tab">{{ product.product_name }}</td>
-
                                     <td class="product-tab"><img src="https://m.media-amazon.com/images/I/61xHHgU0bYL._AC_SL1500_.jpg" class="product-img" alt="product img"></td>
                                     <td class="product-tab">{{ product.product_asin }}</td>
                                     <td class="product-tab">{{ product.date_added }}</td>
@@ -63,6 +63,7 @@
                                     <td class="product-tab">{{ product.lowest_price_date }}</td>
                                     <td class="product-tab">{{ product.current_price }} PLN</td>
                                     <td class="product-tab">{{ product.current_price_date }}</td>
+                                    <td class="product-tab">{{ product.fk_user }}</td>
                                     <td class="product-tab"><button onclick="delete_item({{ product.id }})" class="btn btn-light px-3"><i class="zmdi zmdi-block"></i></button></td>
                                 </tr>
                                 {% endfor %}

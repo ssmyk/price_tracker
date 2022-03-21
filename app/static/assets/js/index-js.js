@@ -4,9 +4,9 @@ function add_item() {
     //document.write(item)
     let is_correct = validate_url(item);
     //document.write(is_correct)
-    if (is_correct) {
+    if (is_correct[0]) {
         //document.write('Link poprawny')
-        document.getElementById("validator").innerHTML = 'Link poprawny'
+        document.getElementById("validator").innerHTML = 'Link poprawny, ASIN: '+is_correct[1]
         // jezeli response bedzie zawieral OK to wtedy odswiezamy
         // NOK wywalamy komunikat
     } else {
@@ -16,8 +16,9 @@ function add_item() {
 }
 
 function validate_url(url) {
-    re = /^(http:\/\/|https:\/\/)?(www\.amazon\.|amazon\.).+\/dp\/[0-9A-Z]{10}/
-    return url.match(re)
+    re = /^(http:\/\/|https:\/\/)?(www\.amazon\.|amazon\.).+\/dp\/[0-9A-Z]{10}(\?|$)/
+    asin = /[0-9A-Z]{10}/
+    return [url.match(re),url.match(asin)]
 }
 
 async function delete_item(product_id){

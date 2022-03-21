@@ -66,7 +66,8 @@ class Dashboard(MethodView):
 
     @login_required
     def get(self):
-        products = Products.query.all()
+        #products = Products.query.all()
+        products = Products.query.filter(Products.fk_user == current_user.id)
         return render_template(self.template_name, products=products)
 
 
