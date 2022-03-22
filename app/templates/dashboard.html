@@ -28,8 +28,8 @@
                                 <ul class="navbar-nav mr-auto align-items-left">
                                     <li class="nav-item">
                                         <form class="search-bar">
-                                            <input type="text" class="form-control" placeholder="Paste link to product">
-                                            <a onclick="add_item()"><i class="icon-magnifier"></i></a>
+                                            <input type="text" class="form-control" id="link" placeholder="Paste link to product">
+                                            <a onclick="add_item({{current_user.id}})"><i class="icon-magnifier"></i></a>
                                         </form>
                                     </li>
                                 </ul>

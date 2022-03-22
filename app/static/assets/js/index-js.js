@@ -1,12 +1,22 @@
-function add_item() {
-    let input = document.getElementsByClassName('form-control')[0];
+function add_item(user_id) {
+    //let input = document.getElementsByClassName('form-control');
+    let input = document.getElementById('link');
+    //console.log(input);
     let item = input.value;
     //document.write(item)
     let is_correct = validate_url(item);
+
     //document.write(is_correct)
-    if (is_correct[0]) {
+    if (is_correct) {
         //document.write('Link poprawny')
-        document.getElementById("validator").innerHTML = 'Link poprawny, ASIN: '+is_correct[1]
+        let asin = is_correct[0].substr(-10);
+        document.getElementById("validator").innerHTML = 'Link poprawny, ASIN: '+ asin;
+        scraper_endpoint = window.location.protocol + '//' + window.location.hostname + ':5500/';
+        console.log(scraper_endpoint);
+        data = {'asin':asin,'user_id': user_id}
+        console.log(JSON.stringify(data));
+        console.log(data);
+        fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
         // jezeli response bedzie zawieral OK to wtedy odswiezamy
         // NOK wywalamy komunikat
     } else {
@@ -16,9 +26,9 @@ function add_item() {
 }
 
 function validate_url(url) {
-    re = /^(http:\/\/|https:\/\/)?(www\.amazon\.|amazon\.).+\/dp\/[0-9A-Z]{10}(\?|$)/
-    asin = /[0-9A-Z]{10}/
-    return [url.match(re),url.match(asin)]
+    re = /^(http:\/\/|https:\/\/)?(www\.amazon\.|amazon\.).+\/dp\/[0-9A-Z]{10}/
+    //asin = /[0-9A-Z]{10}/
+    return url.match(re)
 }
 
 async function delete_item(product_id){

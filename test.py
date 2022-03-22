@@ -12,8 +12,8 @@ def add(x,y):
     return x+y
 
 @app.task
-def prod():
-    page_url = 'https://www.amazon.pl/UGEARS-Flexi-Cubus-antystresowe-koncentracj%C4%99/dp/B07BYD5MG2'
+def prod(asin: str):
+    page_url = f'https://www.amazon.pl/dp/{asin}'
     page = requests.get(page_url, timeout=None)
     soup = BeautifulSoup(page.content, 'html.parser')
     product_name = soup.title.string.split(':')[0]
@@ -59,5 +59,4 @@ def p(self):
         return [product_name, price, image]
     else:
         print(page)
-
         self.retry()

@@ -11,7 +11,7 @@ requests.post('http://localhost:5000/users/',json={
   })
 '''
 for i in range(6):
-    requests.post('http://localhost:5000/products/',json={
+    requests.post('http://localhost:5500/products/',json={
         'product_name' : 'Motorola XYZ',
         'product_asin' : f'2F{i}VSR0JE3G',
         'date_added' : '2021-12-12 13:24:22',
@@ -19,7 +19,7 @@ for i in range(6):
         'current_price_date' : '2021-12-12 13:24:22',
         'lowest_price' : '2100.12',
         'lowest_price_date' : '2021-12-12 13:24:22',
-        'fk_user' : '2'
+        'fk_user' : '1'
       })
 
 #requests.delete('http://localhost:5000/products/1')

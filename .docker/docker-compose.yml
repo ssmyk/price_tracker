@@ -23,7 +23,7 @@ services:
       rabbitmq:
         condition: service_healthy
     volumes:
-      - C:\Users\ssmyk\PycharmProjects\price_tracker:/app
+      - C:\Users\Sebastian\PycharmProjects\price_tracker:/app
 
   web_db:
     image: postgres:14
