@@ -9,4 +9,3 @@ wtforms
 email_validator
 psycopg2
 requests
-flask_cors

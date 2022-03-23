@@ -5,9 +5,9 @@ networks:
       name: TrackingServices
 services:
   web_app:
-    build:
-      context: ../
-      dockerfile: .docker/Dockerfile
+    build: ./web_app
+      #context: ../
+      #dockerfile: ./Dockerfile
     ports:
       - "5000:5000"
     networks:
@@ -22,8 +22,31 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    volumes:
-      - C:\Users\Sebastian\PycharmProjects\price_tracker:/app
+    #volumes:
+      #- C:\Users\ssmyk\PycharmProjects\price_tracker:/app
+
+  scraper_api:
+    build: ./scraper_app
+      #context: .
+      #dockerfile: ./scraper_app/Dockerfile
+    ports:
+      - "5500:5500"
+    networks:
+      iservices:
+        aliases:
+          - tracking-scraper
+    container_name: scraper_api
+    hostname: scraper_api
+    command: [ "python3", "run.py" ]
+    depends_on:
+      web_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    #environment:
+      #- PYTHONPATH=/scraper_app
+    #volumes:
+      #- C:\Users\ssmyk\PycharmProjects\price_tracker\scraper_app:/scraper_app
 
   web_db:
     image: postgres:14

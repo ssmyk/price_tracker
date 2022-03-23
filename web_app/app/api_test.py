@@ -11,7 +11,7 @@ requests.post('http://localhost:5000/users/',json={
   })
 '''
 for i in range(6):
-    requests.post('http://localhost:5500/products/',json={
+    requests.post('http://localhost:5000/products/',json={
         'product_name' : 'Motorola XYZ',
         'product_asin' : f'2F{i}VSR0JE3G',
         'date_added' : '2021-12-12 13:24:22',

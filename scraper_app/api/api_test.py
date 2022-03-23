@@ -1,6 +1,6 @@
 import requests
 
-requests.post('http://localhost:5500/',json={
+requests.post('http://localhost:5000/products/',json={
         'product_name' : 'Motorola XYZ',
         'product_asin' : f'2FVSR0JE3G',
         'date_added' : '2021-12-12 13:24:22',

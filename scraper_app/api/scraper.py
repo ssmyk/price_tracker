@@ -14,8 +14,8 @@ class CallbackTask(tasks_app.Task):
      pass
 
 @tasks_app.task(bind=True,base=CallbackTask,default_retry_delay=2,max_retries=None)
-def scraper_task(self):
-    page_url = f'https://www.amazon.pl/dp/B07BKWL1LB'
+def scraper_task(self, asin: str):
+    page_url = f'https://www.amazon.pl/dp/{asin}'
     print(page_url)
     page = requests.get(page_url, timeout=None)
     if str(page) == "<Response [200]>":
