@@ -11,12 +11,14 @@ function add_item(user_id) {
         //document.write('Link poprawny')
         let asin = is_correct[0].substr(-10);
         document.getElementById("validator").innerHTML = 'Link poprawny, ASIN: '+ asin;
-        scraper_endpoint = window.location.protocol + '//' + window.location.hostname + ':5500/';
+        scraper_endpoint = window.location.protocol + '//' + window.location.hostname + ':5500/api/';
+        //scraper_endpoint = 'http://scraper_api:5500/api/';
         console.log(scraper_endpoint);
         data = {'asin':asin,'user_id': user_id}
         console.log(JSON.stringify(data));
         console.log(data);
         fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
+        //fetch(scraper_endpoint, {method: 'POST', body: data, headers: {"Content-type": "application/json"}});
         // jezeli response bedzie zawieral OK to wtedy odswiezamy
         // NOK wywalamy komunikat
     } else {

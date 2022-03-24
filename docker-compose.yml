@@ -22,8 +22,10 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    environment:
+      - TZ=Europe/Warsaw
     #volumes:
-      #- C:\Users\ssmyk\PycharmProjects\price_tracker:/app
+      #- C:\Users\Sebastian\PycharmProjects\price_tracker:/web_app
 
   scraper_api:
     build: ./scraper_app
@@ -43,10 +45,32 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    environment:
+      - TZ=Europe/Warsaw
     #environment:
       #- PYTHONPATH=/scraper_app
     #volumes:
       #- C:\Users\ssmyk\PycharmProjects\price_tracker\scraper_app:/scraper_app
+  worker:
+    build: ./scraper_app/worker
+    #context: .
+    #dockerfile: ./scraper_app/Dockerfile
+    networks:
+      iservices:
+        aliases:
+          - tracking-worker
+    container_name: worker
+    hostname: worker
+    depends_on:
+      web_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - TZ=Europe/Warsaw
+    volumes:
+      - /scraper_app/worker:/worker/worker
+
 
   web_db:
     image: postgres:14
@@ -63,6 +87,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=price_tracker
       - POSTGRES_INITDB_ARGS='--auth-host=scram-sha-256'
+      - TZ=Europe/Warsaw
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
@@ -89,6 +114,8 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+    environment:
+      - TZ=Europe/Warsaw
 
 
 

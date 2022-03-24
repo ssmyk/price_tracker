@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from celery import Celery
 
-tasks_app = Celery('tasks', backend='rpc://', broker='amqp://guest:guest@localhost//')
+tasks_app = Celery('tasks', backend='rpc://', broker='amqp://guest:guest@rabbitmq//')
 
 class CallbackTask(tasks_app.Task):
     #def on_success(self, retval, task_id, args, kwargs):
@@ -14,8 +14,9 @@ class CallbackTask(tasks_app.Task):
      pass
 
 @tasks_app.task(bind=True,base=CallbackTask,default_retry_delay=2,max_retries=None)
-def scraper_task(self):
-    page_url = f'https://www.amazon.pl/dp/B07BKWL1LB'
+def scraper_task(self, asin: str):
+    page_url = f'https://www.amazon.pl/dp/{asin}'
+    #page_url = f'https://www.amazon.pl/dp/B08Q8L44GJ'
     print(page_url)
     page = requests.get(page_url, timeout=None)
     if str(page) == "<Response [200]>":
