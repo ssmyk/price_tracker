@@ -1,20 +1,22 @@
 function add_item(user_id) {
     //let input = document.getElementsByClassName('form-control');
     let input = document.getElementById('link');
-    //console.log(input);
+
     let item = input.value;
     //document.write(item)
     let is_correct = validate_url(item);
+    let asin = is_correct[0].substr(-10);
+
+    check_product(asin)
 
     //document.write(is_correct)
     if (is_correct) {
         //document.write('Link poprawny')
-        let asin = is_correct[0].substr(-10);
         document.getElementById("validator").innerHTML = 'Link poprawny, ASIN: '+ asin;
         scraper_endpoint = window.location.protocol + '//' + window.location.hostname + ':5500/api/';
         //scraper_endpoint = 'http://scraper_api:5500/api/';
         console.log(scraper_endpoint);
-        data = {'asin':asin,'user_id': user_id}
+        data = {'asin':asin,'user_id': user_id};
         console.log(JSON.stringify(data));
         console.log(data);
         fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
@@ -32,6 +34,24 @@ function validate_url(url) {
     //asin = /[0-9A-Z]{10}/
     return url.match(re)
 }
+
+async function check_product(asin) {
+    db_endpoint = window.location.protocol + '//' + window.location.hostname + ':5000/products';
+    let resp = await fetch(db_endpoint, {method: 'GET'});
+    let obj = await resp.json();
+    //json = JSON.stringify(resp);
+    console.log(obj);
+
+    obj.forEach(function(item){
+    console.log(item.product_asin);
+    if (item.product_asin == asin) {
+    document.getElementById("validator").innerHTML = 'BUMSZAKALKA!'
+    }
+    //document.getElementById("validator").innerHTML = item.product_asin;
+    });
+    }
+
+
 
 async function delete_item(product_id){
     //console.log(product_id);

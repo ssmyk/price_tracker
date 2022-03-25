@@ -68,7 +68,10 @@ class Dashboard(MethodView):
     def get(self):
         #products = Products.query.all()
         products = Products.query.filter(Products.fk_user == current_user.id)
-        return render_template(self.template_name, products=products)
+        asins = []
+        for product in products:
+            asins.append(product.product_asin)
+        return render_template(self.template_name, products=products, asins=asins)
 
 
 class Logout(MethodView):
