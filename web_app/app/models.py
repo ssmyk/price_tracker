@@ -6,13 +6,6 @@ from .forms import RegisterForm
 # from .config import DBConfig
 from flask_marshmallow import fields
 
-'''
-def create_db() -> None:
-    if not os.path.exists('users.sqlite3'):
-        with app.app_context():
-            db.create_all()
-'''
-
 
 def add_to_db(db_entry: Users | Products) -> None:
     db.session.add(db_entry)
@@ -65,6 +58,7 @@ class Products(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String)
+    product_image = db.Column(db.String)
     product_asin = db.Column(db.String, unique=True)
     date_added = db.Column(db.DateTime)
     current_price = db.Column(db.Float)
@@ -73,9 +67,10 @@ class Products(db.Model):
     lowest_price_date = db.Column(db.DateTime)
     fk_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    def __init__(self, product_name, product_asin, date_added, current_price, current_price_date, lowest_price,
+    def __init__(self, product_name, product_image, product_asin, date_added, current_price, current_price_date, lowest_price,
                  lowest_price_date, fk_user):
         self.product_name = product_name
+        self.product_image = product_image
         self.product_asin = product_asin
         self.date_added = date_added
         self.current_price = current_price
@@ -88,6 +83,7 @@ class Products(db.Model):
     def create_from_json(json_body: dict) -> Products:
         return Products(
             product_name=json_body['product_name'],
+            product_image=json_body['product_image'],
             product_asin=json_body['product_asin'],
             date_added=json_body['date_added'],
             current_price=json_body['current_price'],
@@ -108,6 +104,7 @@ class UserSchema(ma.Schema):
 class ProductSchema(ma.Schema):
     _id = fields.fields.Integer()
     product_name = fields.fields.Str()
+    product_image = fields.fields.Str()
     product_asin = fields.fields.Str()
     date_added = fields.fields.DateTime()
     current_price = fields.fields.Float()

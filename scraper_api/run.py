@@ -1,4 +1,4 @@
-from api import create_api
+from app import create_api
 from flask_cors import CORS
 
 if __name__ == "__main__":

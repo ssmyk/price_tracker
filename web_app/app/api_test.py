@@ -13,7 +13,8 @@ requests.post('http://localhost:5000/users/',json={
 for i in range(6):
     requests.post('http://localhost:5000/products/',json={
         'product_name' : 'Motorola XYZ',
-        'product_asin' : f'2F{i}VSR0JE3G',
+        'product_image' : 'https://m.media-amazon.com/images/I/61xHHgU0bYL._AC_SL1500_.jpg',
+        'product_asin' : f'2{i}FVSR0JE3G',
         'date_added' : '2021-12-12 13:24:22',
         'current_price' : '2394.43',
         'current_price_date' : '2021-12-12 13:24:22',

@@ -1,7 +1,7 @@
-from flask import request, make_response
+from flask import request
 from flask.views import MethodView
 
-from worker.scraper import scraper_task
+from .scraper import scraper_task
 
 
 #from api.scraper import scraper_task
