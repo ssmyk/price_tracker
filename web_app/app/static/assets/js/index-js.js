@@ -6,21 +6,30 @@ function add_item(user_id) {
     //document.write(item)
     let is_correct = validate_url(item);
     let asin = is_correct[0].substr(-10);
+    let product_exists = check_product(asin);
+    console.log(product_exists);
 
-    check_product(asin)
-
+    console.log(11+asin);
+    if (check_product(asin)==asin){
+        document.getElementById("validator").innerHTML = 'Produkt jest już śledzony';
+        console.log(check_product(asin));
+        return;
+}
     //document.write(is_correct)
     if (is_correct) {
         //document.write('Link poprawny')
         document.getElementById("validator").innerHTML = 'Link poprawny, ASIN: '+ asin;
         scraper_endpoint = window.location.protocol + '//' + window.location.hostname + ':5500/api/';
         //scraper_endpoint = 'http://scraper_api:5500/api/';
-        console.log(scraper_endpoint);
+        //console.log(scraper_endpoint);
         data = {'asin':asin,'user_id': user_id};
-        console.log(JSON.stringify(data));
-        console.log(data);
-        fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
-        //fetch(scraper_endpoint, {method: 'POST', body: data, headers: {"Content-type": "application/json"}});
+        //console.log(JSON.stringify(data));
+        //console.log(data);
+        //fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
+        w = add_to_tack(data)
+        //console.log(w+1);
+        //console.log(w['task_id']+2);
+        //console.log(w.body);
         // jezeli response bedzie zawieral OK to wtedy odswiezamy
         // NOK wywalamy komunikat
     } else {
@@ -29,39 +38,47 @@ function add_item(user_id) {
     }
 }
 
+async function add_to_tack(data){
+    resp = await fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
+    w = await resp.json();
+    return w
+}
+
 function validate_url(url) {
     re = /^(http:\/\/|https:\/\/)?(www\.amazon\.|amazon\.).+\/dp\/[0-9A-Z]{10}/
-    //asin = /[0-9A-Z]{10}/
     return url.match(re)
 }
 
-async function check_product(asin) {
-    db_endpoint = window.location.protocol + '//' + window.location.hostname + ':5000/products';
-    let resp = await fetch(db_endpoint, {method: 'GET'});
-    let obj = await resp.json();
-    //json = JSON.stringify(resp);
-    console.log(obj);
+async function check_product(asin){
+    products_endpoint = window.location.protocol + '//' + window.location.host + '/products/asin/' + asin;
 
-    obj.forEach(function(item){
-    console.log(item.product_asin);
-    if (item.product_asin == asin) {
-    document.getElementById("validator").innerHTML = 'BUMSZAKALKA!'
+    try{
+        let resp = await fetch(products_endpoint, {method: 'GET'});
+        let obj = await resp.json();
+        //console.log(resp)
+        //console.log(obj)
+        //console.log(obj['product_asin']);
+        return (obj['product_asin']==asin);
+        //if (obj['product_asin']==asin){
+        //console.log('jest w bazie')
+        //return true;
+        //}
+        //else{
+        //console.log('nie ma w bazie')
+        //return false;
+        }
+
+     catch(e){
+        document.getElementById("validator").innerHTML = 'Service unavailable';
+        return
     }
-    //document.getElementById("validator").innerHTML = item.product_asin;
-    });
+
     }
-
-
 
 async function delete_item(product_id){
-    //console.log(product_id);
-    //product_id = product_id.replace('-delete','')
     tr_to_delete = product_id + "-tr";
-    //console.log(tr_to_delete);
     console.log(window.location.host)
     delete_endpoint = window.location.protocol + '//' + window.location.host + '/products/' + product_id;
-    //delete_endpoint = 'http://172.18.0.3/products/' + product_id;
-    //console.log(delete_endpoint);
 
     try{
         resp = await fetch(delete_endpoint, {method: 'DELETE'});
@@ -77,7 +94,6 @@ async function delete_item(product_id){
     else {
         document.getElementById("validator").innerHTML = 'Internal error';
     }
-
 
 }
 

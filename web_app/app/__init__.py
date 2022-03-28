@@ -16,7 +16,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    from .views import Register, Login, Dashboard, Logout, UsersAPI, ProductsAPI
+    from .views import Register, Login, Dashboard, Logout, UsersAPI, ProductsAPI, ProductsAPIasin
     app.add_url_rule("/register", view_func=Register.as_view("register"))
     app.add_url_rule("/login", view_func=Login.as_view("login"))
     app.add_url_rule("/", view_func=Login.as_view(""))
@@ -31,7 +31,9 @@ def create_app():
     product_view = ProductsAPI.as_view('product_api')
     app.add_url_rule('/products/', defaults={'product_id': None}, view_func=product_view, methods=['GET'])
     app.add_url_rule('/products/', view_func=product_view, methods=['POST'])
-    app.add_url_rule('/products/<int:product_id>', view_func=product_view, methods=['GET', 'DELETE'])
+    app.add_url_rule('/products/<int:product_id>', view_func=product_view, methods=['GET','DELETE'])
+
+    app.add_url_rule('/products/asin/<string:product_asin>', view_func=ProductsAPIasin.as_view('product_api_asin'), methods=['GET'])
 
     db.init_app(app)
     lm.init_app(app)

@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+from datetime import datetime
 from celery import Celery
 
 
@@ -27,7 +28,7 @@ class CallbackTask(tasks_app.Task):
      #   self.retry()
 
 
-@tasks_app.task(bind=True,base=CallbackTask,default_retry_delay=2,max_retries=None)
+@tasks_app.task(bind=True,base=CallbackTask,default_retry_delay=1,max_retries=None)
 def scraper_task(self, asin: str):
     page_url = f'https://www.amazon.pl/dp/{asin}'
     #page_url = f'https://www.amazon.pl/dp/B08Q8L44GJ'
@@ -43,11 +44,11 @@ def scraper_task(self, asin: str):
             'product_name': product_name,
             'product_image' : image,
             'product_asin': asin,
-            'date_added': '2021-12-12 13:24:22',
+            'date_added': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'current_price': price,
-            'current_price_date': '2021-12-12 13:24:22',
-            'lowest_price': '2100.12',
-            'lowest_price_date': '2021-12-12 13:24:22',
+            'current_price_date': '2000-12-12 13:24:22',
+            'lowest_price': '210.12',
+            'lowest_price_date': '2000-12-12 13:24:22',
             'fk_user': '1'})
 
         #return [product_name, price, image]
