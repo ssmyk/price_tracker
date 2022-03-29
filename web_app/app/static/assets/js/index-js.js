@@ -1,44 +1,26 @@
 function add_item(user_id) {
-    //let input = document.getElementsByClassName('form-control');
+
     let input = document.getElementById('link');
 
-    let item = input.value;
-    //document.write(item)
-    let is_correct = validate_url(item);
-    let asin = is_correct[0].substr(-10);
-    let product_exists = check_product(asin);
-    console.log(product_exists);
+    let link_to_product = input.value;
 
-    console.log(11+asin);
-    if (check_product(asin)==asin){
-        document.getElementById("validator").innerHTML = 'Produkt jest już śledzony';
-        console.log(check_product(asin));
+    let asin = validate_url(link_to_product);
+    if (!asin) {
+        document.getElementById("validator").innerHTML = 'Link niepoprawny';
         return;
-}
-    //document.write(is_correct)
-    if (is_correct) {
-        //document.write('Link poprawny')
-        document.getElementById("validator").innerHTML = 'Link poprawny, ASIN: '+ asin;
-        scraper_endpoint = window.location.protocol + '//' + window.location.hostname + ':5500/api/';
-        //scraper_endpoint = 'http://scraper_api:5500/api/';
-        //console.log(scraper_endpoint);
-        data = {'asin':asin,'user_id': user_id};
-        //console.log(JSON.stringify(data));
-        //console.log(data);
-        //fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
-        w = add_to_tack(data)
-        //console.log(w+1);
-        //console.log(w['task_id']+2);
-        //console.log(w.body);
-        // jezeli response bedzie zawieral OK to wtedy odswiezamy
-        // NOK wywalamy komunikat
-    } else {
-        // dynamiczny komunikat o niepoprawnym url
-        document.getElementById("validator").innerHTML = 'Link niepoprawny'
     }
+
+    let product_exists = check_asin_in_db(asin);
+    //document.getElementById("validator").innerHTML = product_exists;
+    if (product_exists==true) {
+        document.getElementById("validator").innerHTML = 'Produkt jest już śledzony';
+        return;
+    }
+
+
 }
 
-async function add_to_tack(data){
+async function add_to_track(data){
     resp = await fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
     w = await resp.json();
     return w
@@ -46,31 +28,31 @@ async function add_to_tack(data){
 
 function validate_url(url) {
     re = /^(http:\/\/|https:\/\/)?(www\.amazon\.|amazon\.).+\/dp\/[0-9A-Z]{10}/
-    return url.match(re)
+    //return url.match(re);
+    try{
+        let asin = url.match(re)[0].substr(-10);
+        return asin;
+    } catch(e){
+        return false;
+    }
+
 }
 
-async function check_product(asin){
+function check_asin_in_db(asin){
     products_endpoint = window.location.protocol + '//' + window.location.host + '/products/asin/' + asin;
 
     try{
-        let resp = await fetch(products_endpoint, {method: 'GET'});
-        let obj = await resp.json();
-        //console.log(resp)
-        //console.log(obj)
-        //console.log(obj['product_asin']);
-        return (obj['product_asin']==asin);
-        //if (obj['product_asin']==asin){
-        //console.log('jest w bazie')
-        //return true;
-        //}
-        //else{
-        //console.log('nie ma w bazie')
-        //return false;
+        fetch(products_endpoint, {method: 'GET'})
+        .then(resp => resp.json())
+        .then(resp => console.log(resp))
+        return resp
+        //console.log(obj['product_asin']==asin);
+        //return (obj['product_asin']==asin);
+        //return obj['product_asin']==asin;
         }
-
      catch(e){
         document.getElementById("validator").innerHTML = 'Service unavailable';
-        return
+        return;
     }
 
     }
