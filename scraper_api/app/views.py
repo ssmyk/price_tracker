@@ -1,9 +1,11 @@
+from celery.utils.log import get_task_logger
 from flask import request
 from flask.views import MethodView
+from celery.result import AsyncResult
 
+from .scraper import scraper_task,celery_app
 
-from .scraper import scraper_task
-
+get_task_logger = get_task_logger(__name__)
 
 #from api.scraper import scraper_task
 
@@ -18,7 +20,9 @@ class ScraperAPI(MethodView):
 
 
         return {"task_id":task.id}
+
         #return {'task_id': task.id, 'task_status': task_result.status, 'task_result': task_result.result}
+        #return {'task_status': task.status}
         #return task := scraper_task.delay(body['asin'])
 
 '''
@@ -32,6 +36,11 @@ class ScraperAPI(MethodView):
 '''
 class TasksStatus(MethodView):
     def get(self,task_id):
-        task_result = celery.result.AsyncResult(task_id)
-        result = {'task_id':task_id,'task_status':task_result.status,'task_result':task_result.result}
+        task = celery_app.AsyncResult(task_id)
+        #get_task_logger.info(task)
+        result = {'task_result':task.status}
+
+        print(result)
+        #result = task_status.result
+        #result = {'task_id': task_id, 'task_status': task_result.status, 'task_result': task_result.result}
         return result

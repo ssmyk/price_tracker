@@ -1,7 +1,6 @@
 from __future__ import annotations
 from flask_login import UserMixin
 from . import db, bcrypt, ma
-from datetime import datetime
 from .forms import RegisterForm
 # from .config import DBConfig
 from flask_marshmallow import fields
@@ -112,3 +111,4 @@ class ProductSchema(ma.Schema):
     lowest_price = fields.fields.Float()
     lowest_price_date = fields.fields.DateTime()
     fk_user = fields.fields.Integer()
+

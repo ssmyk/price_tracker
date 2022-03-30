@@ -139,3 +139,4 @@ class ProductsAPIasin(MethodView):
         found_product = Products.query.filter_by(product_asin=product_asin).first()
         return product_schema.jsonify(found_product), 200
 
+

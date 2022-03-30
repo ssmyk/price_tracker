@@ -330,8 +330,8 @@ small {
 .col-xl-8,
 .col-xl-9,
 .col-xl-auto {
-    padding-right: 60px;
-    padding-left: 60px;
+    padding-right: 240px;
+    padding-left: 240px;
 }
 
 tr {
@@ -829,7 +829,7 @@ body.bg-theme15 {
 }
 
 .product-img {
-    height: 50px;
+    height: 150px;
 }
 
 .skill-img {
