@@ -9,3 +9,4 @@ wtforms
 email_validator
 psycopg2
 requests
+Werkzeug~=2.0.0

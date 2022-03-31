@@ -118,12 +118,17 @@ class ProductsAPI(MethodView):
 
     def post(self):
         body = request.json
+        found_product = Products.query.filter_by(fk_user=body['fk_user'],product_asin=body['product_asin']).first()
+        if found_product:
+            return 'Conflict', 409
         new_product = Products.create_from_json(json_body=body)
         try:
             add_to_db(new_product)
-            return user_schema.jsonify(new_product), 200
+            #return user_schema.jsonify(new_product), 200
+            return 'Product added to track', 200
         except:
             return 'Internal error', 500
+
 
 
     def delete(self, product_id):

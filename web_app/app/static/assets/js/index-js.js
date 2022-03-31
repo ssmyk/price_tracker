@@ -48,10 +48,20 @@ async function add_to_track(asin,user_id){
     scraper_endpoint = window.location.protocol + '//' + window.location.hostname + ':5500/api/';
     data = {'asin':asin,'user_id': user_id};
     resp = await fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
-    task_id = await resp.json();
-    //get_status(task_id);
-    console.log(task_id)
-
+    status_code = await resp.status;
+    console.log(status_code)
+    console.log(656+resp.status_code)
+    if(status_code == 200){
+        document.getElementById("validator").innerHTML = 'Product was added';
+    }
+    if(resp.status == 409){
+        document.getElementById("validator").innerHTML = 'Product is already tracked';
+    }
+    else {
+        document.getElementById("validator").innerHTML = 'Internal error';
+    }
+    //task_id = await resp.json();
+    //console.log(task_id)
 }
 
 

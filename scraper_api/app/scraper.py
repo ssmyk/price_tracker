@@ -29,7 +29,7 @@ class CallbackTask(celery_app.Task):
 
 
 @celery_app.task(bind=True,base=CallbackTask,default_retry_delay=1,max_retries=None)
-def scraper_task(self, asin: str):
+def scraper_task(self, asin: str, user_id: str):
     page_url = f'https://www.amazon.pl/dp/{asin}'
     #page_url = f'https://www.amazon.pl/dp/B08Q8L44GJ'
     print(page_url)
@@ -40,7 +40,7 @@ def scraper_task(self, asin: str):
         price = float(soup.find(id='tp_price_block_total_price_ww').get_text().split('zł')[0].replace('\xa0', '').replace(',','.'))
         image = soup.find(id="landingImage")['data-old-hires']
 
-        requests.post('http://web_app:5000/products/', json={
+        resp = requests.post('http://web_app:5000/products/', json={
             'product_name': product_name,
             'product_image' : image,
             'product_asin': asin,
@@ -49,10 +49,9 @@ def scraper_task(self, asin: str):
             'current_price_date': '2000-12-12 13:24:22',
             'lowest_price': '210.12',
             'lowest_price_date': '2000-12-12 13:24:22',
-            'fk_user': '1'})
-
-        #return [product_name, price, image]
+            'fk_user': user_id})
+        return resp
     else:
-        print(page)
+        #print(page)
         self.retry()
 

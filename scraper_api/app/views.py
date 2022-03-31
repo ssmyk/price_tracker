@@ -14,7 +14,7 @@ class ScraperAPI(MethodView):
         body = request.json
         print(body)
         print(body['asin'])
-        task = scraper_task.delay(body['asin'])
+        task = scraper_task.delay(body['asin'],body['user_id'])
         print(task.id)
         #task_result = task.result.AsyncResult(task_id)
 
