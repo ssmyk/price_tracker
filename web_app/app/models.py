@@ -58,7 +58,7 @@ class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String)
     product_image = db.Column(db.String)
-    product_asin = db.Column(db.String, unique=True)
+    product_asin = db.Column(db.String)
     date_added = db.Column(db.DateTime)
     current_price = db.Column(db.Float)
     current_price_date = db.Column(db.DateTime)

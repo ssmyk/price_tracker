@@ -34,13 +34,14 @@ class ScraperAPI(MethodView):
         # return {"task_id":task.id}
         return response
 '''
-class TasksStatus(MethodView):
+class TaskStatus(MethodView):
     def get(self,task_id):
         task = celery_app.AsyncResult(task_id)
         #get_task_logger.info(task)
-        result = {'task_result':task.status}
+        print(task.status)
+        result = {'task_status':task.status}
 
-        print(result)
+
         #result = task_status.result
         #result = {'task_id': task_id, 'task_status': task_result.status, 'task_result': task_result.result}
         return result

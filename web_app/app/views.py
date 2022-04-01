@@ -139,9 +139,5 @@ class ProductsAPI(MethodView):
         except:
             return 'Internal error', 500
 
-class ProductsAPIasin(MethodView):
-    def get(self, product_asin: str):
-        found_product = Products.query.filter_by(product_asin=product_asin).first()
-        return product_schema.jsonify(found_product), 200
 
 

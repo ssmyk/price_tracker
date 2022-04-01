@@ -9,20 +9,9 @@ function add_item(user_id) {
         document.getElementById("validator").innerHTML = 'Link niepoprawny';
         return;
     }
-    add_to_track(asin,user_id)
-/*
+    add_to_track(asin, user_id)
 
-    let product_exists = check_asin_in_db(asin);
-    console.log(product_exists.json())
-    //let product_exists = check_asin_in_db(asin).then(value => console.log(value));
 
-    //document.getElementById("validator").innerHTML = product_exists;
-    if (product_exists) {
-        document.getElementById("validator").innerHTML = 'Produkt jest już śledzony';
-        return;
-    }
-
-*/
 }
 
 /*
@@ -46,49 +35,41 @@ if (is_correct) {
 */
 async function add_to_track(asin,user_id){
     scraper_endpoint = window.location.protocol + '//' + window.location.hostname + ':5500/api/';
-    data = {'asin':asin,'user_id': user_id};
-    resp = await fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
-    status_code = await resp.status;
-    console.log(status_code)
-    console.log(656+resp.status_code)
-    if(status_code == 200){
-        document.getElementById("validator").innerHTML = 'Product was added';
-    }
-    if(resp.status == 409){
-        document.getElementById("validator").innerHTML = 'Product is already tracked';
-    }
-    else {
-        document.getElementById("validator").innerHTML = 'Internal error';
-    }
-    //task_id = await resp.json();
-    //console.log(task_id)
+    let data = {'asin':asin,'user_id': user_id};
+    let resp = await fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
+    let json = await resp.json();
+    let task_id = json['task_id'];
+
+    get_status(task_id);
+    //console.log(status)
+    //get_status_api = window.location.protocol + '//' + window.location.hostname + ':5500/status/' + task_id;
 }
 
-
-function get_status(task_id){
+function get_status(task_id) {
+    setTimeout(async function () {
     get_status_api = window.location.protocol + '//' + window.location.hostname + ':5500/status/' + task_id;
+    let resp = await fetch(get_status_api);
+    let status = await resp.json();
+    console.log(status['task_status']);
+    if (status['task_status'] == 'DUPLICATE'){
+    location.reload();
+    document.getElementById("validator").innerHTML = status['task_status'];
+    return;
+    }
+    if (status['task_status'] == 'ADDED'){
+    location.reload();
+    document.getElementById("validator").innerHTML = status['task_status'];
+    return;
+    }
+    if (status['task_status'] == 'ERROR'){
+    location.reload();
+    document.getElementById("validator").innerHTML = status['task_status'];
+    return;
+    }
 
-
-    fetch(get_status_api)
-        .then(res => {
-            // console.log(res)
-            const task_status = res.task_status;
-
-            // console.log(taskResult)
-            if (taskStatus === 'FAILURE') {
-                console.log('error');
-                return false
-            }else if(taskStatus === 'SUCCESS'){
-                console.log(taskResult);
-                return true
-            }
-            setTimeout(function (){
-                // console.log(taskStatus);
-                getStatus(res.task_id);
-            }, 1000)
-        })
+    get_status(task_id);
+    }, 1000);
 }
-
 
 
 function validate_url(url) {
@@ -102,27 +83,7 @@ function validate_url(url) {
     }
 
 }
-/*
-function check_asin_in_db(asin){
-    products_endpoint = window.location.protocol + '//' + window.location.host + '/products/asin/' + asin;
 
-    let resp = fetch(products_endpoint, {method: 'GET'})
-    .then(resp => resp.json())
-    .then(data => console.log(data));
-    return data
-
-    }
-
-*/
-
-async function check_asin_in_db(asin){
-    products_endpoint = window.location.protocol + '//' + window.location.host + '/products/asin/' + asin;
-
-    let resp = await fetch(products_endpoint, {method: 'GET'});
-    let obj = await resp.json();
-    return obj;
-
-    }
 
 async function delete_item(product_id){
     tr_to_delete = product_id + "-tr";
