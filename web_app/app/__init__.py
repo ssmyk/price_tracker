@@ -12,6 +12,7 @@ bcrypt = Bcrypt()
 migrate = Migrate()
 ma = Marshmallow()
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -31,12 +32,12 @@ def create_app():
     product_view = ProductsAPI.as_view('product_api')
     app.add_url_rule('/products/', defaults={'product_id': None}, view_func=product_view, methods=['GET'])
     app.add_url_rule('/products/', view_func=product_view, methods=['POST'])
-    app.add_url_rule('/products/<int:product_id>', view_func=product_view, methods=['GET','DELETE'])
+    app.add_url_rule('/products/<int:product_id>', view_func=product_view, methods=['GET', 'DELETE'])
 
     db.init_app(app)
     lm.init_app(app)
     bcrypt.init_app(app)
-    migrate.init_app(app,db)
+    migrate.init_app(app, db)
     ma.init_app(app)
 
     return app

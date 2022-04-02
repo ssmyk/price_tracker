@@ -118,7 +118,7 @@ address {
 dl,
 ol,
 ul {
-    margin-top: 0;
+    /*margin-top: 0;*/
     margin-bottom: 1rem
 }
 
@@ -8249,7 +8249,7 @@ button.bg-dark:hover {
 
 .mb-1,
 .my-1 {
-    margin-bottom: .25rem!important
+    margin-bottom: -5rem!important
 }
 
 .ml-1,

@@ -66,7 +66,6 @@ class Dashboard(MethodView):
 
     @login_required
     def get(self):
-        #products = Products.query.all()
         products = Products.query.filter(Products.fk_user == current_user.id)
         asins = []
         for product in products:
@@ -124,7 +123,6 @@ class ProductsAPI(MethodView):
         new_product = Products.create_from_json(json_body=body)
         try:
             add_to_db(new_product)
-            #return user_schema.jsonify(new_product), 200
             return 'Product added to track', 200
         except:
             return 'Internal error', 500

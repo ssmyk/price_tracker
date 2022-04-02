@@ -2,7 +2,6 @@ from __future__ import annotations
 from flask_login import UserMixin
 from . import db, bcrypt, ma
 from .forms import RegisterForm
-# from .config import DBConfig
 from flask_marshmallow import fields
 
 
@@ -66,7 +65,8 @@ class Products(db.Model):
     lowest_price_date = db.Column(db.DateTime)
     fk_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    def __init__(self, product_name, product_image, product_asin, date_added, current_price, current_price_date, lowest_price,
+    def __init__(self, product_name, product_image, product_asin, date_added, current_price, current_price_date,
+                 lowest_price,
                  lowest_price_date, fk_user):
         self.product_name = product_name
         self.product_image = product_image
@@ -111,4 +111,3 @@ class ProductSchema(ma.Schema):
     lowest_price = fields.fields.Float()
     lowest_price_date = fields.fields.DateTime()
     fk_user = fields.fields.Integer()
-
