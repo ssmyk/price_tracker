@@ -41,3 +41,22 @@ def scraper_task(self, asin: str, user_id: str):
 
     else:
         self.retry()
+
+@celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
+def scraper_task_update(self, asin: str, user_id: str):
+    page_url = f'https://www.amazon.pl/dp/{asin}'
+    page = requests.get(page_url, timeout=None)
+    if str(page) == "<Response [200]>":
+        soup = BeautifulSoup(page.content, 'html.parser')
+        price = float(
+            soup.find(id='tp_price_block_total_price_ww').get_text().split('zł')[0].replace('\xa0', '').replace(',',
+                                                                                                                '.'))
+        date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        requests.post('http://web_app:5000/products/update/', json={
+            'product_asin': asin,
+            'date': date,
+            'price': price,
+            'fk_user': user_id})
+        return f'Current price for {asin}: {price} PLN'
+    else:
+        self.retry()

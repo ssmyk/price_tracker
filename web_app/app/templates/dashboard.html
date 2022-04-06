@@ -24,6 +24,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h5>Tracked products</h5>
+                            <a onclick="refresh()" class="btn btn-light px-4">Refresh all</a>
                             <div style='display:flex'>
                                 <ul class="navbar-nav mr-auto align-items-left">
                                     <li class="nav-item">
@@ -33,8 +34,8 @@
                                         </form>
                                     </li>
                                 </ul>
-                                <h4 class="text-warning mb-1" Id="validator"></h4>
 
+                                <h4 class="text-warning mb-1" Id="validator"></h4>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -45,7 +46,7 @@
                                 <tr id="{{ product.id }}-tr">
 
                                     <td class="product-tab"><img src="{{ product.product_image }}" class="product-img" alt="product img"></td>
-                                    <td class="product-tab"><p></p><strong>{{ product.product_name }}</strong></p>
+                                    <td class="product-tab"><a href="https://www.amazon.pl/dp/{{ product.product_asin }}" class="product-tab" target="_blank"><strong>{{ product.product_name }}</strong></a></p>
                                     <p><strong>ASIN:</strong> {{ product.product_asin }}</p>
                                         <p><strong>Added:</strong> {{ product.date_added }}</p>
                                         <p><strong>Lowest price:</strong> {{ product.lowest_price }} PLN ({{ product.lowest_price_date }})</p>

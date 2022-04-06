@@ -66,7 +66,7 @@ class Dashboard(MethodView):
 
     @login_required
     def get(self):
-        products = Products.query.filter(Products.fk_user == current_user.id)
+        products = Products.query.filter(Products.fk_user == current_user.id).order_by(Products.date_added)
         asins = []
         for product in products:
             asins.append(product.product_asin)
@@ -138,4 +138,19 @@ class ProductsAPI(MethodView):
             return 'Internal error', 500
 
 
-
+class ProductUpdateAPI(MethodView):
+    def post(self):
+        body = request.json
+        found_product = Products.query.filter_by(fk_user=body['fk_user'],product_asin=body['product_asin']).first()
+        if body['price']<found_product.lowest_price:
+            found_product.lowest_price=body['price']
+            found_product.lowest_price_date=body['date']
+            found_product.current_price=body['price']
+            found_product.current_price_date=body['date']
+            db.session.commit()
+            return 'Product updated', 200
+        else:
+            found_product.current_price = body['price']
+            found_product.current_price_date = body['date']
+            db.session.commit()
+            return 'Product updated', 200

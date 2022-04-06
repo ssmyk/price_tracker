@@ -221,7 +221,7 @@ a {
 }
 
 a:hover {
-    color: #ffffff;
+    /*color: #ffffff;*/
     text-decoration: none;
 }
 

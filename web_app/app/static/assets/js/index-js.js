@@ -5,12 +5,10 @@ function add_item(user_id) {
 
     let asin = validate_url(link_to_product);
     if (!asin) {
-        document.getElementById("validator").innerHTML = 'Link niepoprawny';
+        document.getElementById("validator").innerHTML = 'Invalid URL';
         return;
     }
     add_to_track(asin, user_id)
-
-
 }
 
 async function add_to_track(asin,user_id){
@@ -34,7 +32,7 @@ function get_status(task_id) {
     document.getElementById("validator").innerHTML = loading;
     if (status['task_status'] == 'DUPLICATE'){
     document.getElementById("validator").innerHTML = 'Product is already tracked';
-    page_reload();
+    wait_for_clear();
     return;
     }
     if (status['task_status'] == 'ADDED'){
@@ -43,9 +41,8 @@ function get_status(task_id) {
     return;
     }
     if (status['task_status'] == 'ERROR'){
-    location.reload();
     document.getElementById("validator").innerHTML = 'Internal error';
-    page_reload();
+    wait_for_clear();
     return;
     }
     get_status(task_id);
@@ -57,6 +54,17 @@ function page_reload(){
 setTimeout(function () {
     location.reload();
     }, 5000);
+}
+
+function wait_for_clear(){
+setTimeout(function () {
+document.getElementById("validator").innerHTML = '';
+    }, 3000);
+}
+
+function refresh(){
+    refresh_api = get_status_api = window.location.protocol + '//' + window.location.hostname + ':5500/api';
+    fetch(refresh_api);
 }
 
 function validate_url(url) {
