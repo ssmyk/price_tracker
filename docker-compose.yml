@@ -3,11 +3,10 @@ networks:
   iservices:
     external:
       name: TrackingServices
+
 services:
   web_app:
     build: ./web_app
-      #context: ../
-      #dockerfile: ./Dockerfile
     ports:
       - "5000:5000"
     networks:
@@ -25,12 +24,10 @@ services:
     environment:
       - TZ=Europe/Warsaw
     volumes:
-      - C:\Users\ssmyk\PycharmProjects\price_tracker\web_app:/web_app
+      - C:\Users\Sebastian\PycharmProjects\price_tracker\web_app:/web_app
 
   scraper_api:
     build: scraper_api
-      #context: .
-      #dockerfile: ./scraper_app/Dockerfile
     ports:
       - "5500:5500"
     networks:
@@ -47,20 +44,18 @@ services:
         condition: service_healthy
     environment:
       - TZ=Europe/Warsaw
-    #environment:
-      #- PYTHONPATH=/scraper_app
     volumes:
-      - C:\Users\ssmyk\PycharmProjects\price_tracker\scraper_api:/scraper_api
-  worker:
+      - C:\Users\Sebastian\PycharmProjects\price_tracker\scraper_api:/scraper_api
+
+
+  worker_scraper:
     build: scraper_api
-    #context: .
-    #dockerfile: ./scraper_app/Dockerfile
     networks:
       iservices:
         aliases:
-          - tracking-worker
-    container_name: worker
-    hostname: worker
+          - tracking-worker-scraper
+    container_name: worker_scraper
+    hostname: worker_scraper
     depends_on:
       web_db:
         condition: service_healthy
@@ -69,6 +64,43 @@ services:
     environment:
       - TZ=Europe/Warsaw
     command: ['celery', '-A', 'app.scraper', 'worker', '-l', 'info']
+    #command: ['celery', '-A', 'app.scraper', 'worker', '-l', 'info', '-Q', 'scraper']
+    #command: ['celery', '-A', 'app.scraper', 'worker', '-l', 'info']
+
+  worker_beat:
+    build: celery_beat_app
+    networks:
+      iservices:
+        aliases:
+          - tracking-worker-beat
+    container_name: worker_beat
+    hostname: worker_beat
+    depends_on:
+      web_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - TZ=Europe/Warsaw
+    #command: [ 'celery', '-A', 'job', 'worker', '-l', 'info', '-Q', 'beat' ]
+    command: [ 'celery', '-A', 'job', 'worker', '-l', 'info']
+
+  beat_app:
+    build: celery_beat_app
+    networks:
+      iservices:
+        aliases:
+          - tracking-beat
+    container_name: beat_app
+    hostname: beat_app
+    depends_on:
+      web_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - TZ=Europe/Warsaw
+    command: [ 'celery', '-A', 'job', 'beat', '-l', 'info']
 
 
   web_db:
@@ -108,6 +140,10 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
+
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./definitions.json:/etc/rabbitmq/definitions.json
+
     healthcheck:
       test: rabbitmq-diagnostics check_port_connectivity
       interval: 1s
@@ -115,6 +151,7 @@ services:
       retries: 30
     environment:
       - TZ=Europe/Warsaw
+    #command: bash -c 'sleep 10 && rabbitmqctl add_vhost new_host'
 
 
 

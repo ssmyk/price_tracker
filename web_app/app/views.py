@@ -67,10 +67,7 @@ class Dashboard(MethodView):
     @login_required
     def get(self):
         products = Products.query.filter(Products.fk_user == current_user.id).order_by(Products.date_added)
-        asins = []
-        for product in products:
-            asins.append(product.product_asin)
-        return render_template(self.template_name, products=products, asins=asins)
+        return render_template(self.template_name, products=products)
 
 
 class Logout(MethodView):

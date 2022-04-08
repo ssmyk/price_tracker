@@ -4,8 +4,9 @@ from datetime import datetime
 from celery import Celery
 from celery.exceptions import Ignore
 
-celery_app = Celery('tasks', backend='rpc://', broker='amqp://guest:guest@rabbitmq//')
-
+celery_app = Celery('tasks',backend='rpc://', broker='amqp://scraper:scraper@rabbitmq/scraper')
+#celery_app = Celery('tasks', queue='scraper',backend='rpc://', broker='amqp://scraper:scraper@rabbitmq/scraper')
+#celery_app = Celery('tasks',backend='rpc://', broker='amqp://guest:guest@rabbitmq//')
 
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
 def scraper_task(self, asin: str, user_id: str):
@@ -60,3 +61,4 @@ def scraper_task_update(self, asin: str, user_id: str):
         return f'Current price for {asin}: {price} PLN'
     else:
         self.retry()
+
