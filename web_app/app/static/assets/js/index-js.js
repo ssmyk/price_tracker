@@ -35,7 +35,7 @@ function get_status(task_id) {
     wait_for_clear();
     return;
     }
-    if (status['task_status'] == 'ADDED'){
+    if (status['task_status'] == 'CREATED'){
     document.getElementById("validator").innerHTML = 'Product was added to track';
     page_reload();
     return;

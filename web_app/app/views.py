@@ -79,27 +79,27 @@ class Logout(MethodView):
 
 class UsersAPI(MethodView):
     @login_required
-    def get(self, user_id):
+    def get(self, user_id: int):
         if user_id is None:
             all_users = Users.query.all()
-            return users_schema.jsonify(all_users)
+            return users_schema.jsonify(all_users), 200
         found_user = Users.query.get(user_id)
-        return user_schema.jsonify(found_user)
+        return user_schema.jsonify(found_user), 200
 
     def post(self):
         body = request.json
         new_user = Users.create_from_json(json_body=body)
         try:
             add_to_db(new_user)
-            return user_schema.jsonify(new_user), 200
+            return 'User created', 201
         except:
             return 'Internal error', 500
 
-    def delete(self, user_id):
+    def delete(self, user_id: int):
         user_to_delete = Users.query.get(user_id)
         try:
             delete_from_db(user_to_delete)
-            return user_schema.jsonify(user_to_delete)
+            return 'User deleted', 200
         except:
             return 'Internal error', 500
 
@@ -120,17 +120,17 @@ class ProductsAPI(MethodView):
         new_product = Products.create_from_json(json_body=body)
         try:
             add_to_db(new_product)
-            return 'Product added to track', 200
+            return 'Product added to track', 201
         except:
             return 'Internal error', 500
 
 
 
-    def delete(self, product_id):
+    def delete(self, product_id: int):
         product_to_delete = Products.query.get(product_id)
         try:
             delete_from_db(product_to_delete)
-            return user_schema.jsonify(product_to_delete), 200
+            return 'Product deleted', 200
         except:
             return 'Internal error', 500
 

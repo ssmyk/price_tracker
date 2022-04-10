@@ -6,7 +6,7 @@ networks:
 
 services:
   web_app:
-    build: ./web_app
+    build: web_app
     ports:
       - "5000:5000"
     networks:
@@ -48,14 +48,14 @@ services:
       - C:\Users\Sebastian\PycharmProjects\price_tracker\scraper_api:/scraper_api
 
 
-  worker_scraper:
+  celery_worker:
     build: scraper_api
     networks:
       iservices:
         aliases:
           - tracking-worker-scraper
-    container_name: worker_scraper
-    hostname: worker_scraper
+    container_name: celery_worker
+    hostname: celery_worker
     depends_on:
       web_db:
         condition: service_healthy
@@ -64,35 +64,16 @@ services:
     environment:
       - TZ=Europe/Warsaw
     command: ['celery', '-A', 'app.scraper', 'worker', '-l', 'info']
-    #command: ['celery', '-A', 'app.scraper', 'worker', '-l', 'info', '-Q', 'scraper']
-    #command: ['celery', '-A', 'app.scraper', 'worker', '-l', 'info']
 
-  worker_beat:
-    build: celery_beat_app
-    networks:
-      iservices:
-        aliases:
-          - tracking-worker-beat
-    container_name: worker_beat
-    hostname: worker_beat
-    depends_on:
-      web_db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    environment:
-      - TZ=Europe/Warsaw
-    #command: [ 'celery', '-A', 'job', 'worker', '-l', 'info', '-Q', 'beat' ]
-    command: [ 'celery', '-A', 'job', 'worker', '-l', 'info']
 
-  beat_app:
-    build: celery_beat_app
+  celery_beat:
+    build: scraper_api
     networks:
       iservices:
         aliases:
           - tracking-beat
-    container_name: beat_app
-    hostname: beat_app
+    container_name: celery_beat
+    hostname: celery_beat
     depends_on:
       web_db:
         condition: service_healthy
@@ -100,7 +81,7 @@ services:
         condition: service_healthy
     environment:
       - TZ=Europe/Warsaw
-    command: [ 'celery', '-A', 'job', 'beat', '-l', 'info']
+    command: [ 'celery', '-A', 'app.scraper', 'beat', '-l', 'info']
 
 
   web_db:
@@ -141,9 +122,6 @@ services:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
 
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./definitions.json:/etc/rabbitmq/definitions.json
-
     healthcheck:
       test: rabbitmq-diagnostics check_port_connectivity
       interval: 1s
@@ -151,7 +129,7 @@ services:
       retries: 30
     environment:
       - TZ=Europe/Warsaw
-    #command: bash -c 'sleep 10 && rabbitmqctl add_vhost new_host'
+
 
 
 

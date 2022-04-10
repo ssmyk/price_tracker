@@ -4,15 +4,19 @@ from datetime import datetime
 from celery import Celery
 from celery.exceptions import Ignore
 
-celery_app = Celery('tasks',backend='rpc://', broker='amqp://scraper:scraper@rabbitmq/scraper')
-#celery_app = Celery('tasks', queue='scraper',backend='rpc://', broker='amqp://scraper:scraper@rabbitmq/scraper')
-#celery_app = Celery('tasks',backend='rpc://', broker='amqp://guest:guest@rabbitmq//')
+celery_beat_schedule = {"time_scheduler": {"task": "app.scraper.run_update","schedule": 30.0}}
+
+celery_app = Celery('tasks',backend='rpc://', broker='amqp://guest:guest@rabbitmq//',beat_schedule=celery_beat_schedule)
+
+@celery_app.task(default_retry_delay=1, max_retries=None)
+def run_update():
+    requests.get('http://scraper_api:5500/api/')
 
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
-def scraper_task(self, asin: str, user_id: str):
+def scraper_task_add(self, asin: str, user_id: str):
     page_url = f'https://www.amazon.pl/dp/{asin}'
     page = requests.get(page_url, timeout=None)
-    if str(page) == "<Response [200]>":
+    if page.status_code == 200:
         soup = BeautifulSoup(page.content, 'html.parser')
         product_name = soup.title.string.split(':')[0]
         price = float(
@@ -30,16 +34,10 @@ def scraper_task(self, asin: str, user_id: str):
             'lowest_price': price,
             'lowest_price_date': date,
             'fk_user': user_id})
-        if resp.status_code == 409:
-            self.update_state(state='DUPLICATE')
-            raise Ignore()
-        elif resp.status_code == 200:
-            self.update_state(state='ADDED')
-            raise Ignore()
-        elif resp.status_code == 500:
-            self.update_state(state='ERROR')
-            raise Ignore()
-
+        status_code = resp.status_code
+        new_status=task_status_update(status_code)
+        self.update_state(state=new_status)
+        raise Ignore()
     else:
         self.retry()
 
@@ -61,4 +59,8 @@ def scraper_task_update(self, asin: str, user_id: str):
         return f'Current price for {asin}: {price} PLN'
     else:
         self.retry()
+
+def task_status_update(status_code: int) -> str:
+    statuses = {409:'DUPLICATE', 201:'CREATED', 500:'ERROR'}
+    return statuses.get(status_code)
 

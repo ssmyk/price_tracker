@@ -13,7 +13,7 @@ migrate = Migrate()
 ma = Marshmallow()
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
 
