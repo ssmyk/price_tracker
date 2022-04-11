@@ -16,13 +16,13 @@ def delete_from_db(db_entry: Users | Products) -> None:
 
 
 class Users(db.Model, UserMixin):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
-    products = db.relationship('Products', backref='users', lazy=True)
+    products = db.relationship("Products", backref="users", lazy=True)
 
     def __init__(self, username, email, password):
         self.username = username
@@ -37,22 +37,24 @@ class Users(db.Model, UserMixin):
 
     @staticmethod
     def create_user(form: RegisterForm) -> Users:
-        user = Users(username=form.username.data,
-                     email=form.email.data,
-                     password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"))
+        user = Users(
+            username=form.username.data,
+            email=form.email.data,
+            password=bcrypt.generate_password_hash(form.password.data).decode("utf-8"),
+        )
         return user
 
     @staticmethod
     def create_from_json(json_body: dict) -> Users:
         return Users(
-            username=json_body['username'],
-            email=json_body['email'],
-            password=json_body['password']
+            username=json_body["username"],
+            email=json_body["email"],
+            password=json_body["password"],
         )
 
 
 class Products(db.Model):
-    __tablename__ = 'products'
+    __tablename__ = "products"
 
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String)
@@ -63,11 +65,20 @@ class Products(db.Model):
     current_price_date = db.Column(db.DateTime)
     lowest_price = db.Column(db.Float)
     lowest_price_date = db.Column(db.DateTime)
-    fk_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    fk_user = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-    def __init__(self, product_name, product_image, product_asin, date_added, current_price, current_price_date,
-                 lowest_price,
-                 lowest_price_date, fk_user):
+    def __init__(
+        self,
+        product_name,
+        product_image,
+        product_asin,
+        date_added,
+        current_price,
+        current_price_date,
+        lowest_price,
+        lowest_price_date,
+        fk_user,
+    ):
         self.product_name = product_name
         self.product_image = product_image
         self.product_asin = product_asin
@@ -81,15 +92,15 @@ class Products(db.Model):
     @staticmethod
     def create_from_json(json_body: dict) -> Products:
         return Products(
-            product_name=json_body['product_name'],
-            product_image=json_body['product_image'],
-            product_asin=json_body['product_asin'],
-            date_added=json_body['date_added'],
-            current_price=json_body['current_price'],
-            current_price_date=json_body['current_price_date'],
-            lowest_price=json_body['lowest_price'],
-            lowest_price_date=json_body['lowest_price_date'],
-            fk_user=json_body['fk_user']
+            product_name=json_body["product_name"],
+            product_image=json_body["product_image"],
+            product_asin=json_body["product_asin"],
+            date_added=json_body["date_added"],
+            current_price=json_body["current_price"],
+            current_price_date=json_body["current_price_date"],
+            lowest_price=json_body["lowest_price"],
+            lowest_price_date=json_body["lowest_price_date"],
+            fk_user=json_body["fk_user"],
         )
 
 

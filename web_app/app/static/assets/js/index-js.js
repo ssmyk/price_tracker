@@ -1,4 +1,4 @@
-function add_item(user_id) {
+async function add_item(user_id) {
 
     let input = document.getElementById('link');
     let link_to_product = input.value;
@@ -8,7 +8,8 @@ function add_item(user_id) {
         document.getElementById("validator").innerHTML = 'Invalid URL';
         return;
     }
-    add_to_track(asin, user_id)
+    task_id = await add_to_track(asin, user_id)
+    get_status(task_id);
 }
 
 async function add_to_track(asin,user_id){
@@ -17,8 +18,7 @@ async function add_to_track(asin,user_id){
     let resp = await fetch(scraper_endpoint, {method: 'POST', body: JSON.stringify(data), headers: {"Content-type": "application/json"}});
     let json = await resp.json();
     let task_id = json['task_id'];
-
-    get_status(task_id);
+    return task_id
 
 }
 
@@ -30,17 +30,18 @@ function get_status(task_id) {
     console.log(status['task_status']);
     let loading = '<h4>Please wait...<div class="lds-facebook"><div></div><div></div><div></div></div></h4>'
     document.getElementById("validator").innerHTML = loading;
-    if (status['task_status'] == 'DUPLICATE'){
+    let current_status = status['task_status']
+    if (current_status == 'DUPLICATE'){
     document.getElementById("validator").innerHTML = 'Product is already tracked';
     wait_for_clear();
     return;
     }
-    if (status['task_status'] == 'CREATED'){
+    if (current_status == 'CREATED'){
     document.getElementById("validator").innerHTML = 'Product was added to track';
     page_reload();
     return;
     }
-    if (status['task_status'] == 'ERROR'){
+    if (current_status == 'ERROR'){
     document.getElementById("validator").innerHTML = 'Internal error';
     wait_for_clear();
     return;
@@ -49,11 +50,12 @@ function get_status(task_id) {
     }, 1000);
 }
 
+//function result_status
 
 function page_reload(){
 setTimeout(function () {
     location.reload();
-    }, 5000);
+    }, 3000);
 }
 
 function wait_for_clear(){
@@ -62,9 +64,9 @@ document.getElementById("validator").innerHTML = '';
     }, 3000);
 }
 
-function refresh(){
-    refresh_api = get_status_api = window.location.protocol + '//' + window.location.hostname + ':5500/api';
-    fetch(refresh_api);
+function refresh_all(){
+    refresh_api = window.location.protocol + '//' + window.location.hostname + ':5500/api/';
+    fetch(refresh_api, {method:'PATCH'});
 }
 
 function validate_url(url) {
@@ -79,7 +81,6 @@ function validate_url(url) {
 
 async function delete_item(product_id){
     tr_to_delete = product_id + "-tr";
-    console.log(window.location.host)
     delete_endpoint = window.location.protocol + '//' + window.location.host + '/products/' + product_id;
 
     try{
@@ -89,7 +90,6 @@ async function delete_item(product_id){
         page_reload();
         return
     }
-    console.log(resp.status)
     if(resp.status == 200){
         document.getElementById(tr_to_delete).remove();
         document.getElementById("validator").innerHTML = 'Product was removed';
