@@ -6,16 +6,26 @@ from flask_marshmallow import fields
 
 
 def add_to_db(db_entry: Users | Products) -> None:
+    """
+    Adds a new entry to database.
+    """
     db.session.add(db_entry)
     db.session.commit()
 
 
 def delete_from_db(db_entry: Users | Products) -> None:
+    """
+    Deletes specific entry from database.
+    """
     db.session.delete(db_entry)
     db.session.commit()
 
 
 class Users(db.Model, UserMixin):
+    """
+    Users database model. Stores all registered users.
+    """
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -31,12 +41,18 @@ class Users(db.Model, UserMixin):
 
     @staticmethod
     def email_validator(email: str) -> bool:
+        """
+        Checks if provided email address is already registered in database.
+        """
         if Users.query.filter_by(email=email).first():
             return True
         return False
 
     @staticmethod
     def create_user(form: RegisterForm) -> Users:
+        """
+        Creates Users object from register form.
+        """
         user = Users(
             username=form.username.data,
             email=form.email.data,
@@ -46,6 +62,9 @@ class Users(db.Model, UserMixin):
 
     @staticmethod
     def create_from_json(json_body: dict) -> Users:
+        """
+        Creates Users object from JSON.
+        """
         return Users(
             username=json_body["username"],
             email=json_body["email"],
@@ -54,6 +73,10 @@ class Users(db.Model, UserMixin):
 
 
 class Products(db.Model):
+    """
+    Products database model. Stores all tracked products.
+    """
+
     __tablename__ = "products"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -91,6 +114,9 @@ class Products(db.Model):
 
     @staticmethod
     def create_from_json(json_body: dict) -> Products:
+        """
+        Creates Products object from JSON.
+        """
         return Products(
             product_name=json_body["product_name"],
             product_image=json_body["product_image"],
@@ -105,6 +131,10 @@ class Products(db.Model):
 
 
 class UserSchema(ma.Schema):
+    """
+    Defines output format after serialization for Users object.
+    """
+
     _id = fields.fields.Integer()
     username = fields.fields.Str()
     email = fields.fields.Str()
@@ -112,6 +142,10 @@ class UserSchema(ma.Schema):
 
 
 class ProductSchema(ma.Schema):
+    """
+    Defines output format after serialization for Products object.
+    """
+
     _id = fields.fields.Integer()
     product_name = fields.fields.Str()
     product_image = fields.fields.Str()

@@ -14,6 +14,9 @@ ma = Marshmallow()
 
 
 def create_app() -> Flask:
+    """
+    Creates main program instance with all needed modules, defines views and API endpoints.
+    """
     app = Flask(__name__)
     app.config.from_object(Config)
 
@@ -37,6 +40,7 @@ def create_app() -> Flask:
     app.add_url_rule(
         "/users/", defaults={"user_id": None}, view_func=user_view, methods=["GET"]
     )
+
     app.add_url_rule("/users/", view_func=user_view, methods=["POST"])
     app.add_url_rule(
         "/users/<int:user_id>", view_func=user_view, methods=["GET", "DELETE"]

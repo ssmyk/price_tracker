@@ -1,5 +1,5 @@
-flask
-flask_cors
-bs4
-requests
-celery
+flask==2.1.1
+flask_cors==3.0.10
+bs4==0.0.1
+requests==2.27.1
+celery==5.2.6

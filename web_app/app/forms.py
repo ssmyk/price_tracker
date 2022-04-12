@@ -2,6 +2,10 @@ from wtforms import Form, StringField, PasswordField, validators, SubmitField
 
 
 class RegisterForm(Form):
+    """
+    Defines form fields which allows to register a new user.
+    """
+
     username = StringField(
         "Username", [validators.DataRequired(), validators.Length(min=4, max=12)]
     )
@@ -23,6 +27,10 @@ class RegisterForm(Form):
 
 
 class LoginForm(Form):
+    """
+    Defines form fields which allows an user to log into the system.
+    """
+
     email = StringField("Email", [validators.DataRequired()])
     password = PasswordField("Password")
     submit = SubmitField("Login")

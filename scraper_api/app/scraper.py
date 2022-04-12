@@ -18,11 +18,17 @@ celery_app = Celery(
 
 @celery_app.task(default_retry_delay=1, max_retries=None)
 def run_update():
+    """
+    Sends a request to scraper API to update all products details. Used by celery beat according to the defined schedule.
+    """
     requests.get("http://scraper_api:5500/api/")
 
 
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
 def scraper_task_add(self, asin: str, user_id: str):
+    """
+    Task to scrap new products details and add it to the database.
+    """
     page_url = f"https://www.amazon.pl/dp/{asin}"
     page = requests.get(page_url, timeout=None)
     if page.status_code == 200:
@@ -40,7 +46,6 @@ def scraper_task_add(self, asin: str, user_id: str):
         product_details["date"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         product_details["asin"] = asin
         product_details["user_id"] = user_id
-
         resp = create_product_request(product_details)
         status_code = resp.status_code
         new_status = task_status_update(status_code)
@@ -51,6 +56,9 @@ def scraper_task_add(self, asin: str, user_id: str):
 
 
 def create_product_request(product_details: dict) -> requests.models.Response:
+    """
+    Creates a request to add new product do database.
+    """
     resp = requests.post(
         "http://web_app:5000/products/",
         json={
@@ -69,17 +77,22 @@ def create_product_request(product_details: dict) -> requests.models.Response:
 
 
 def task_status_update(status_code: int) -> str:
+    """
+    Updates celery task status based on response from database after try to add new product.
+    """
     statuses = {409: "DUPLICATE", 201: "CREATED", 500: "ERROR"}
     return statuses.get(status_code)
 
 
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
 def scraper_task_update(self, asin: str, user_id: str):
+    """
+    Task which is started for every product to update details about it. Launches by scheduled run_update task.
+    """
     page_url = f"https://www.amazon.pl/dp/{asin}"
     page = requests.get(page_url, timeout=None)
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
-
         product_details = {}
         product_details["price"] = float(
             soup.find(id="tp_price_block_total_price_ww")
@@ -98,6 +111,9 @@ def scraper_task_update(self, asin: str, user_id: str):
 
 
 def update_product_request(product_details: dict) -> None:
+    """
+    Creates a request to update product details in database.
+    """
     requests.post(
         "http://web_app:5000/products/update/",
         json={
