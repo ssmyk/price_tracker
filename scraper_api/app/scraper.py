@@ -21,7 +21,7 @@ def run_update():
     """
     Sends a request to scraper API to update all products details. Used by celery beat according to the defined schedule.
     """
-    requests.get("http://scraper_api:5500/api/")
+    requests.patch("http://scraper_api:5500/api/")
 
 
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
