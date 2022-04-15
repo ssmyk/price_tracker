@@ -1,11 +1,9 @@
 {% macro display_errors(form) %}
-
 <br>
     <ul class=errors>
     {% for error in form.errors %}
       <li>{{ error }}</li>
     {% endfor %}
     </ul>
-
 {% endmacro %}
 

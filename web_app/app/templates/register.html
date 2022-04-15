@@ -1,75 +1,53 @@
-{% extends 'base.html' %}
-{% from "macros.html" import display_errors %}
-{% block content %}
-<div id="wrapper">
-    <div class="content-wrapper">
-        <div class="card card-authentication1 mx-auto my-4">
-            <div class="card-body">
-                <div class="card-content p-2">
-                    <div class="card-title text-uppercase text-center py-3">Register</div>
-                    <form action="#" method="post">
-                        <div class="form-group">
-                            <div class="position-relative has-icon-right">
-                                {{ form.username(class="form-control input-shadow",placeholder="Enter Your Username") }}
-                                <div class="form-control-position">
-                                    <i class="icon-user"></i>
-                                </div>
-                                {% if form.username.errors %}
-                                {{ display_errors(form.username) }}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="position-relative has-icon-right">
-                                {{ form.email(class="form-control input-shadow",placeholder="Enter Your Email") }}
-                                <div class="form-control-position">
-                                    <i class="icon-envelope-open"></i>
-                                </div>
-                                {% if form.email.errors %}
-                                {{ display_errors(form.email) }}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="position-relative has-icon-right">
-                                {{ form.password(class="form-control input-shadow",placeholder="Enter password") }}
-                                <div class="form-control-position">
-                                    <i class="icon-lock"></i>
-                                </div>
-                                {% if form.password.errors %}
-                                {{ display_errors(form.password) }}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="position-relative has-icon-right">
-                                {{ form.confirm(class="form-control input-shadow",placeholder="Repeat password") }}
-                                <div class="form-control-position">
-                                    <i class="icon-lock"></i>
-                                </div>
-                                {% if form.confirm.errors %}
-                                {{ display_errors(form.confirm) }}
-                                {% endif %}
-                            </div>
-                        </div>
-                        {{form.submit(class="btn btn-light btn-block waves-effect waves-light")}}
-                        {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                        {% for message in messages %}
-                        <div class="form-group">
-                            <div class="btn btn-light btn-block">
-                                <p class="text-warning mb-0">{{ message }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                        {% endif %}
-                        {% endwith %}
-                    </form>
-                </div>
+{% extends 'base.html' %} {% from "macros.html" import display_errors %} {% block content %} <div id="wrapper">
+  <div class="content-wrapper">
+    <div class="card card-authentication1 mx-auto my-4">
+      <div class="card-body">
+        <div class="card-content p-2">
+          <div class="card-title text-uppercase text-center py-3">Register</div>
+          <form action="#" method="post">
+            <div class="form-group">
+              <div class="position-relative has-icon-right">
+                {{ form.username(class="form-control input-shadow",placeholder="Enter Your Username") }}
+                <div class="form-control-position">
+                  <i class="icon-user"></i>
+                </div> {% if form.username.errors %} {{ display_errors(form.username) }} {% endif %}
+              </div>
             </div>
-            <div class="card-footer text-center py-3">
-                <p class="text-warning mb-0">Already have an account? <a href="login"> Login here</a></p>
+            <div class="form-group">
+              <div class="position-relative has-icon-right">
+                {{ form.email(class="form-control input-shadow",placeholder="Enter Your Email") }}
+                <div class="form-control-position">
+                  <i class="icon-envelope-open"></i>
+                </div> {% if form.email.errors %} {{ display_errors(form.email) }} {% endif %}
+              </div>
             </div>
+            <div class="form-group">
+              <div class="position-relative has-icon-right">
+                {{ form.password(class="form-control input-shadow",placeholder="Enter password") }}
+                <div class="form-control-position">
+                  <i class="icon-lock"></i>
+                </div> {% if form.password.errors %} {{ display_errors(form.password) }} {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="position-relative has-icon-right">
+                {{ form.confirm(class="form-control input-shadow",placeholder="Repeat password") }}
+                <div class="form-control-position">
+                  <i class="icon-lock"></i>
+                </div> {% if form.confirm.errors %} {{ display_errors(form.confirm) }} {% endif %}
+              </div>
+            </div>
+            {{form.submit(class="btn btn-light btn-block waves-effect waves-light")}} {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %} <div class="form-group">
+              <div class="btn btn-light btn-block">
+                <p class="text-warning mb-0">{{ message }}</p>
+              </div>
+            </div> {% endfor %} {% endif %} {% endwith %}
+          </form>
         </div>
+      </div>
+      <div class="card-footer text-center py-3">
+        <p class="text-warning mb-0">Already have an account? <a href="login"> Login here</a>
+        </p>
+      </div>
     </div>
-    {% endblock %}
+  </div> {% endblock %}

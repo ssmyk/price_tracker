@@ -1,16 +1,24 @@
 from __future__ import annotations
+
+import datetime
+
 from flask_login import UserMixin
 from . import db, bcrypt, ma
 from .forms import RegisterForm
 from flask_marshmallow import fields
+from sqlalchemy import exc
 
 
 def add_to_db(db_entry: Users | Products) -> None:
     """
     Adds a new entry to database.
     """
+
     db.session.add(db_entry)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except exc.SQLAlchemyError:
+        db.session.rollback()
 
 
 def delete_from_db(db_entry: Users | Products) -> None:
@@ -18,7 +26,10 @@ def delete_from_db(db_entry: Users | Products) -> None:
     Deletes specific entry from database.
     """
     db.session.delete(db_entry)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except exc.SQLAlchemyError:
+        db.session.rollback()
 
 
 class Users(db.Model, UserMixin):
@@ -34,7 +45,7 @@ class Users(db.Model, UserMixin):
     password = db.Column(db.String)
     products = db.relationship("Products", backref="users", lazy=True)
 
-    def __init__(self, username: str, email: str, password:str) -> None:
+    def __init__(self, username: str, email: str, password: str) -> None:
         self.username = username
         self.email = email
         self.password = password
@@ -91,15 +102,15 @@ class Products(db.Model):
 
     def __init__(
         self,
-        product_name,
-        product_image,
-        product_asin,
-        date_added,
-        current_price,
+        product_name: str,
+        product_image: str,
+        product_asin: str,
+        date_added: datetime.datetime,
+        current_price: float,
         current_price_date,
-        lowest_price,
+        lowest_price: float,
         lowest_price_date,
-        fk_user,
+        fk_user: int,
     ):
         self.product_name = product_name
         self.product_image = product_image

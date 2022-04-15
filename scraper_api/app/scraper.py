@@ -3,21 +3,22 @@ import requests
 from datetime import datetime
 from celery import Celery
 from celery.exceptions import Ignore
+from decouple import config
 
 celery_beat_schedule = {
-    "time_scheduler": {"task": "app.scraper.run_update", "schedule": 30.0}
+    "time_scheduler": {"task": "app.scraper.run_update", "schedule": 1800.0}
 }
 
 celery_app = Celery(
     "tasks",
-    backend="rpc://",
-    broker="amqp://guest:guest@rabbitmq//",
+    backend=config("BACKEND"),
+    broker=config("BROKER"),
     beat_schedule=celery_beat_schedule,
 )
 
 
 @celery_app.task(default_retry_delay=1, max_retries=None)
-def run_update():
+def run_update() -> None:
     """
     Sends a request to scraper API to update all products details. Used by celery beat according to the defined schedule.
     """
@@ -25,7 +26,7 @@ def run_update():
 
 
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
-def scraper_task_add(self, asin: str, user_id: str):
+def scraper_task_add(self, asin: str, user_id: str) -> None:
     """
     Task to scrape new products details and add it to the database.
     """
@@ -85,7 +86,7 @@ def task_status_update(status_code: int) -> str:
 
 
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
-def scraper_task_update(self, asin: str, user_id: str):
+def scraper_task_update(self, asin: str, user_id: str) -> str:
     """
     Task which is started for every product to update details about it. Launches by scheduled run_update task.
     """

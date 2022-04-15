@@ -1,7 +1,7 @@
 from flask import Flask
 
 
-def create_api():
+def create_api() -> Flask:
     app = Flask(__name__)
     from .views import ScraperAPI, TaskStatus
 

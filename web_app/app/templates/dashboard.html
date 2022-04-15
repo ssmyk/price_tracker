@@ -1,74 +1,73 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div id="wrapper">
-    <div class="content-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12 col-lg-12" style='display:flex'>
-                    <div class="card" >
-                        <div class="card-header" style='display:flex'>
-                            <h5>{{current_user.username}}&nbsp;</h5>
-                            <a class="btn btn-light px-2" href="logout">Log Out <i class="icon-power"></i></a>
-                        </div>
-                    </div>
-                </div>
+{% extends 'base.html' %} {% block content %} <div id="wrapper">
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-lg-12" style='display:flex'>
+          <div class="card">
+            <div class="card-header" style='display:flex'>
+              <h5>{{current_user.username}}&nbsp;</h5>
+              <a class="btn btn-light px-2" href="logout">Log Out <i class="icon-power"></i>
+              </a>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-
-    <div class="content-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Tracked products</h5>
-                            <a onclick="refresh_all()" class="btn btn-light px-4">Refresh all</a>
-                            <div style='display:flex'>
-                                <ul class="navbar-nav mr-auto align-items-left">
-                                    <li class="nav-item">
-                                        <form class="search-bar">
-                                            <input type="text" class="form-control" id="link" placeholder="Paste link to product">
-                                            <a onclick="add_item({{current_user.id}})"><i class="icon-magnifier"></i></a>
-                                        </form>
-                                    </li>
-                                </ul>
-
-                                <h4 class="text-warning mb-1" Id="validator"></h4>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table align-items-center table-flush table-borderless">
-
-                                {% for product in products %}
-
-                                <tr id="{{ product.id }}-tr">
-
-                                    <td class="product-tab"><img src="{{ product.product_image }}" class="product-img" alt="product img"></td>
-                                    <td class="product-tab"><a href="https://www.amazon.pl/dp/{{ product.product_asin }}" class="product-tab" target="_blank"><strong>{{ product.product_name }}</strong></a></p>
-                                    <p><strong>ASIN:</strong> {{ product.product_asin }}</p>
-                                        <p><strong>Added:</strong> {{ product.date_added }}</p>
-                                        <p><strong>Lowest price:</strong> {{ product.lowest_price }} PLN ({{ product.lowest_price_date }})</p>
-                                    <p><strong>Current price:</strong> {{ product.current_price }} PLN ({{ product.current_price_date }})</p>
-
-                                    </td>
-
-                                    <td class="product-tab"><button onclick="delete_item({{ product.id }})" class="btn btn-light px-3"><i class="zmdi zmdi-block"></i> Delete</button></td>
-
-                                </tr>
-                                {% endfor %}
-
-                            </table>
-                        </div>
-                    </div>
-                </div>
+  </div>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>Tracked products</h5>
+              <a onclick="refresh_all()" class="btn btn-light px-4">Refresh all</a>
+              <div style='display:flex'>
+                <ul class="navbar-nav mr-auto align-items-left">
+                  <li class="nav-item">
+                    <form class="search-bar">
+                      <input type="text" class="form-control" id="link" placeholder="Paste link to product">
+                      <a onclick="add_item({{current_user.id}})">
+                        <i class="icon-magnifier"></i>
+                      </a>
+                    </form>
+                  </li>
+                </ul>
+                <h4 class="text-warning mb-1" Id="validator"></h4>
+              </div>
             </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush table-borderless"> {% for product in products %} <tr id="{{ product.id }}-tr">
+                  <td class="product-tab">
+                    <img src="{{ product.product_image }}" class="product-img" alt="product img">
+                  </td>
+                  <td class="product-tab">
+                    <a href="https://www.amazon.pl/dp/{{ product.product_asin }}" class="product-tab" target="_blank">
+                      <strong>{{ product.product_name }}</strong>
+                    </a>
+                    </p>
+                    <p>
+                      <strong>ASIN:</strong> {{ product.product_asin }}
+                    </p>
+                    <p>
+                      <strong>Added:</strong> {{ product.date_added }}
+                    </p>
+                    <p>
+                      <strong>Lowest price:</strong> {{ product.lowest_price }} PLN ({{ product.lowest_price_date }})
+                    </p>
+                    <p>
+                      <strong>Current price:</strong> {{ product.current_price }} PLN ({{ product.current_price_date }})
+                    </p>
+                  </td>
+                  <td class="product-tab">
+                    <button onclick="delete_item({{ product.id }})" class="btn btn-light px-3">
+                      <i class="zmdi zmdi-block"></i> Delete </button>
+                  </td>
+                </tr> {% endfor %} </table>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-
-</div>
-{% endblock %}
-
-
-
+  </div>
+</div> {% endblock %}

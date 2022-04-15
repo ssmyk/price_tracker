@@ -1,48 +1,44 @@
-{% extends 'base.html' %}
-{% block content %}
-<div id="wrapper">
-    <div class="content-wrapper">
-        <div class="card card-authentication1 mx-auto my-4">
-            <div class="card-body">
-                <div class="card-content p-2">
-                    <div class="card-title text-uppercase text-center py-3">Login</div>
-                    <form method="post">
-                        <div class="form-group">
-                            <div class="position-relative has-icon-right">
-                                {{ form.email(class="form-control input-shadow",placeholder="Enter Email")}}
-                                <div class="form-control-position">
-                                    <i class="icon-user"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="position-relative has-icon-right">
-                                {{ form.password(class="form-control input-shadow",placeholder="Enter Password") }}
-                                <div class="form-control-position">
-                                    <i class="icon-lock"></i>
-                                </div>
-                            </div>
-                        </div>
-                        {{ form.submit(class="btn btn-light btn-block")}}
-
-                        {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                        {% for message in messages %}
-                        <div class="form-group">
-                            <div class="btn btn-light btn-block">
-                                <p class="text-warning mb-0">{{ message }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                        {% endif %}
-                        {% endwith %}
-
-                    </form>
+{% extends 'base.html' %} {% block content %} <div id="wrapper">
+  <div class="content-wrapper">
+    <div class="card card-authentication1 mx-auto my-4">
+      <div class="card-body">
+        <div class="card-content p-2">
+          <div class="card-title text-uppercase text-center py-3">Login</div>
+          <form method="post">
+            <div class="form-group">
+              <div class="position-relative has-icon-right">
+                {{ form.email(class="form-control input-shadow",placeholder="Enter Email")}}
+                <div class="form-control-position">
+                  <i class="icon-user"></i>
                 </div>
+              </div>
             </div>
-            <div class="card-footer text-center py-3">
-                <p class="text-warning mb-0">Do not have an account? <a href="register"> Register here</a></p>
+            <div class="form-group">
+              <div class="position-relative has-icon-right">
+                {{ form.password(class="form-control input-shadow",placeholder="Enter Password") }}
+                <div class="form-control-position">
+                  <i class="icon-lock"></i>
+                </div>
+              </div>
             </div>
+            {{ form.submit(class="btn btn-light btn-block")}}
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="form-group">
+              <div class="btn btn-light btn-block">
+                <p class="text-warning mb-0">{{ message }}</p>
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+          </form>
         </div>
+      </div>
+      <div class="card-footer text-center py-3">
+        <p class="text-warning mb-0">Do not have an account? <a href="register"> Register here</a>
+        </p>
+      </div>
     </div>
-    {% endblock %}
+  </div> {% endblock %}

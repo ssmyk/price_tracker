@@ -4,6 +4,7 @@ from .models import *
 from . import lm, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from flask.views import MethodView
+from werkzeug import Response
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -12,7 +13,7 @@ products_schema = ProductSchema(many=True)
 
 
 @lm.user_loader
-def load_user(user_id):
+def load_user(user_id) -> Users:
     """
     Reloads the user from the user_id stored in session.
     """
@@ -34,7 +35,7 @@ class Register(MethodView):
         form = RegisterForm()
         return render_template(self.template_name, form=form)
 
-    def post(self) -> "Response" | str :
+    def post(self) -> Response | str:
         """
         Allows to get request from register site to create a new user. Checks if a posted user is already in registered.
         """
@@ -58,7 +59,7 @@ class Login(MethodView):
     def __init__(self):
         self.template_name = "login.html"
 
-    def get(self):
+    def get(self) -> Response | str:
         """
         Renders login site and login form. If the user is already logged redirects to dashboard site.
         """
@@ -67,7 +68,7 @@ class Login(MethodView):
         form = LoginForm()
         return render_template(self.template_name, form=form)
 
-    def post(self):
+    def post(self) -> Response:
         """
         Allows to obtain login data provided by the user. Checks whether the user provided correct data and whether is registered in the system.
         """
@@ -93,7 +94,7 @@ class Dashboard(MethodView):
         self.template_name = "dashboard.html"
 
     @login_required
-    def get(self):
+    def get(self) -> str:
         """
         Displays information about tracked products of the logged in user.
         """
@@ -108,7 +109,7 @@ class Logout(MethodView):
     Allows the user to log out.
     """
 
-    def get(self):
+    def get(self) -> Response:
         """
         Redirects logged out user to login site.
         """
@@ -123,7 +124,7 @@ class UsersAPI(MethodView):
     """
 
     @login_required
-    def get(self, user_id: int):
+    def get(self, user_id: int) -> (Response, int):
         """
         Allows to obtain all users or a specific one.
         """
@@ -145,7 +146,7 @@ class UsersAPI(MethodView):
         except:
             return "Internal error", 500
 
-    def delete(self, user_id: int):
+    def delete(self, user_id: int) -> (str, int):
         """
         Deletes user with specific ID.
         """
@@ -162,7 +163,7 @@ class ProductsAPI(MethodView):
     API to manage products.
     """
 
-    def get(self, product_id: int):
+    def get(self, product_id: int) -> (Response, int):
         """
         Allows to obtain all products or a specific one.
         """
@@ -172,7 +173,7 @@ class ProductsAPI(MethodView):
         found_product = Products.query.get(product_id)
         return product_schema.jsonify(found_product), 200
 
-    def post(self):
+    def post(self) -> (str, int):
         """
         Used by scraper to create a new product. Already existing product will not be replaced.
         """
@@ -189,7 +190,7 @@ class ProductsAPI(MethodView):
         except:
             return "Internal error", 500
 
-    def delete(self, product_id: int):
+    def delete(self, product_id: int) -> (str, int):
         """
         Allows to delete a product entry using a button on the dashboard.
         """
@@ -206,7 +207,7 @@ class ProductUpdateAPI(MethodView):
     API to let update product entry by scraper.
     """
 
-    def post(self):
+    def post(self) -> (str, int):
         """
         Updates product details depending on conditions.
         """

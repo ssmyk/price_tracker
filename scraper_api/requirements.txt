@@ -3,3 +3,4 @@ flask_cors==3.0.10
 bs4==0.0.1
 requests==2.27.1
 celery==5.2.6
+python_decouple==3.6

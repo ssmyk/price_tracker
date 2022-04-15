@@ -13,7 +13,7 @@ class ScraperAPI(MethodView):
     API which allows to start celery tasks.
     """
 
-    def post(self):
+    def post(self) -> dict:
         """
         Starts a celery task to scrap new product details and add it to tracking.
         """
@@ -21,7 +21,7 @@ class ScraperAPI(MethodView):
         task = scraper_task_add.delay(body["asin"], body["user_id"])
         return {"task_id": task.id}
 
-    def patch(self):
+    def patch(self) -> str:
         """
         Updates information of all tracked products in database.
         """
@@ -39,7 +39,7 @@ class TaskStatus(MethodView):
     Used to retrieve current celery task status.
     """
 
-    def get(self, task_id):
+    def get(self, task_id) -> dict:
         task = celery_app.AsyncResult(task_id)
         print(task.status)
         result = {"task_status": task.status}

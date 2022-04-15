@@ -24,7 +24,7 @@ services:
     environment:
       - TZ=Europe/Warsaw
     volumes:
-      - C:\Users\ssmyk\PycharmProjects\price_tracker\web_app:/web_app
+      - C:\Users\Sebastian\PycharmProjects\price_tracker\web_app:/web_app
 
 
   scraper_api:
@@ -46,7 +46,7 @@ services:
     environment:
       - TZ=Europe/Warsaw
     volumes:
-      - C:\Users\ssmyk\PycharmProjects\price_tracker\scraper_api:/scraper_api
+      - C:\Users\Sebastian\PycharmProjects\price_tracker\scraper_api:/scraper_api
 
 
   celery_worker:
