@@ -22,7 +22,7 @@ def run_update() -> None:
     """
     Sends a request to scraper API to update all products details. Used by celery beat according to the defined schedule.
     """
-    requests.patch("http://scraper_api:5500/api/")
+    requests.patch(config("API_SCRAPER_PATCH"))
 
 
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
@@ -61,7 +61,7 @@ def create_product_request(product_details: dict) -> requests.models.Response:
     Creates a request to add new product do database.
     """
     resp = requests.post(
-        "http://web_app:5000/products/",
+        config("API_PRODUCTS_POST"),
         json={
             "product_name": product_details["name"],
             "product_image": product_details["image"],
@@ -115,8 +115,8 @@ def update_product_request(product_details: dict) -> None:
     """
     Creates a request to update product details in database.
     """
-    requests.post(
-        "http://web_app:5000/products/update/",
+    requests.patch(
+        config("API_PRODUCTS_PATCH"),
         json={
             "product_asin": product_details["asin"],
             "date": product_details["date"],

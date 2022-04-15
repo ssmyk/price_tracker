@@ -207,7 +207,7 @@ class ProductUpdateAPI(MethodView):
     API to let update product entry by scraper.
     """
 
-    def post(self) -> (str, int):
+    def patch(self) -> (str, int):
         """
         Updates product details depending on conditions.
         """

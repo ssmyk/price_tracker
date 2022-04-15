@@ -60,7 +60,7 @@ def create_app() -> Flask:
 
     product_update_view = ProductUpdateAPI.as_view("product_update_api")
     app.add_url_rule(
-        "/products/update/", view_func=product_update_view, methods=["POST"]
+        "/products/update/", view_func=product_update_view, methods=["PATCH"]
     )
 
     db.init_app(app)

@@ -2,6 +2,7 @@ from celery.utils.log import get_task_logger
 from flask import request
 from flask.views import MethodView
 import requests
+from decouple import config
 
 from .scraper import scraper_task_add, celery_app, scraper_task_update
 
@@ -25,7 +26,7 @@ class ScraperAPI(MethodView):
         """
         Updates information of all tracked products in database.
         """
-        resp = requests.get("http://web_app:5000/products/")
+        resp = requests.get(config("API_PRODUCTS_GET"))
         products = resp.json()
         for product in products:
             asin = product["product_asin"]
