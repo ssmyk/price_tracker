@@ -27,7 +27,7 @@ def run_update():
 @celery_app.task(bind=True, default_retry_delay=1, max_retries=None)
 def scraper_task_add(self, asin: str, user_id: str):
     """
-    Task to scrap new products details and add it to the database.
+    Task to scrape new products details and add it to the database.
     """
     page_url = f"https://www.amazon.pl/dp/{asin}"
     page = requests.get(page_url, timeout=None)

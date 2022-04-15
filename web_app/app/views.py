@@ -27,14 +27,14 @@ class Register(MethodView):
     def __init__(self):
         self.template_name = "register.html"
 
-    def get(self):
+    def get(self) -> str:
         """
         Renders register site with register forms
         """
         form = RegisterForm()
         return render_template(self.template_name, form=form)
 
-    def post(self):
+    def post(self) -> "Response" | str :
         """
         Allows to get request from register site to create a new user. Checks if a posted user is already in registered.
         """
@@ -75,11 +75,11 @@ class Login(MethodView):
         if not Users.email_validator(form.email.data):
             flash("User not registered")
             return redirect(url_for("login"))
-        else:
-            user = Users.query.filter_by(email=form.email.data).first()
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user)
-                return redirect(url_for("dashboard"))
+
+        user = Users.query.filter_by(email=form.email.data).first()
+        if bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            return redirect(url_for("dashboard"))
         flash("Invalid password provided")
         return redirect(url_for("login"))
 

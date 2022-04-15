@@ -26,6 +26,7 @@ services:
     volumes:
       - C:\Users\ssmyk\PycharmProjects\price_tracker\web_app:/web_app
 
+
   scraper_api:
     build: scraper_api
     ports:
@@ -95,17 +96,17 @@ services:
         aliases:
           - tracking-db-backend
     environment:
-      #- POSTGRES_USER=price_tracker
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=price_tracker
-      - POSTGRES_INITDB_ARGS='--auth-host=scram-sha-256'
-      - TZ=Europe/Warsaw
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - TZ=${TZ}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 30s
       retries: 6
     restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:3-management-alpine

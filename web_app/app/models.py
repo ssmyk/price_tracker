@@ -34,7 +34,7 @@ class Users(db.Model, UserMixin):
     password = db.Column(db.String)
     products = db.relationship("Products", backref="users", lazy=True)
 
-    def __init__(self, username, email, password):
+    def __init__(self, username: str, email: str, password:str) -> None:
         self.username = username
         self.email = email
         self.password = password
@@ -44,9 +44,8 @@ class Users(db.Model, UserMixin):
         """
         Checks if provided email address is already registered in database.
         """
-        if Users.query.filter_by(email=email).first():
-            return True
-        return False
+
+        return Users.query.filter_by(email=email).first() is not None
 
     @staticmethod
     def create_user(form: RegisterForm) -> Users:
