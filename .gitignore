@@ -1,0 +1,4 @@
+data/
+scraper_api/app/.env
+web_app/app/.env
+.env
