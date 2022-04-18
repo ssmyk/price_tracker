@@ -29,7 +29,7 @@ login system, it is possible to track prices by many users simultaneously.
 
 1. Create `.env` files.  
    &nbsp;  
-   There are below `.env_default` files:
+   There are below `.env_default` files:  
    ```
    price_tracker\.env_default
    price_tracker\web_app\app\.env_default
@@ -39,7 +39,7 @@ login system, it is possible to track prices by many users simultaneously.
    &nbsp;
 2. Build and run containers.  
    &nbsp;  
-   Inside program folder run in CMD:
+   Inside program folder run in CMD:  
    `docker compose up --build`  
    &nbsp;
 3. Migrate database.  
