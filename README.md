@@ -48,7 +48,7 @@ login system, it is possible to track prices by many users simultaneously.
    `flask db init`  
    &nbsp;  
    Go to folder /web_app/migration and put inside file `env.py`:   
-   `from app.models import Users, Products  
+   `from app.models import Users, Products`  
    &nbsp;  
    Run in CLI:  
    `flask db migrate`  
