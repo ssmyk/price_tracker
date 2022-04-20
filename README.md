@@ -60,3 +60,7 @@ login system, it is possible to track prices by many users simultaneously.
 ## Application view
 
 ![price_tracker](https://user-images.githubusercontent.com/72394779/163056004-a508c403-7f7c-420b-97bb-8a60e26bbbc7.gif)
+
+## Architecture diagram
+
+![price_tracker](https://user-images.githubusercontent.com/72394779/164174706-e099d0b4-db54-4124-aa2f-c066f303ef1d.png)
